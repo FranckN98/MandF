@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 // Lien personnel de modification : "<id en base64url>.<signature HMAC-SHA256>".
-// Rien n'est stocké : le lien se régénère à l'identique (renvoi par e-mail) tant que la version du jeton n'a pas changé.
+// Rien n'est stocké : le lien se régénère à l'identique (par l'organisateur, depuis /admin) tant que la version du jeton n'a pas changé.
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 

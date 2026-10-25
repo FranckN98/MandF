@@ -13,7 +13,7 @@ function anonymize(value: string): string {
   return createHmac("sha256", salt).update(value).digest("hex").slice(0, 32);
 }
 
-/** Retourne true si l'appel est autorisé. Les identifiants (IP, e-mail) sont hachés avant d'être stockés. */
+/** Retourne true si l'appel est autorisé. Les identifiants (IP, numéro de téléphone) sont hachés avant d'être stockés. */
 export async function allowRequest(scope: string, identifier: string, limit: number, windowSeconds: number): Promise<boolean> {
   const { data, error } = await getServiceClient().rpc("check_rate_limit", {
     p_key: `${scope}:${anonymize(identifier)}`,

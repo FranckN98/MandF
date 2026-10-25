@@ -20,10 +20,9 @@ export default function PrivacyPage() {
 
       <h2 className={h2}>Quelles données sont collectées ?</h2>
       <ul className="mt-3 list-disc space-y-1.5 pl-5 leading-relaxed text-ink-soft">
-        <li>Prénom, nom de famille et adresse e-mail ; numéro WhatsApp (facultatif).</li>
-        <li>Votre réponse sur votre présence, et si vous venez : vos dates d&apos;arrivée et de départ.</li>
-        <li>Votre intérêt pour un logement commun, le nombre d&apos;adultes et d&apos;enfants à héberger, l&apos;âge des enfants et vos remarques (facultatifs).</li>
-        <li>Votre réponse sur le dîner et le commentaire libre éventuel.</li>
+        <li>Prénom, nom et adresse e-mail.</li>
+        <li>Votre réponse sur votre présence et, si vous venez : le nombre d&apos;accompagnants (adultes et enfants), leurs prénoms (facultatif), vos dates d&apos;arrivée et de départ.</li>
+        <li>Votre besoin de logement commun et le nombre de personnes à loger.</li>
         <li>La date et l&apos;heure de votre consentement, de la création et de la dernière modification de votre réponse.</li>
       </ul>
       <p className={p}>
@@ -33,20 +32,20 @@ export default function PrivacyPage() {
 
       <h2 className={h2}>Pourquoi ces données sont-elles utilisées ?</h2>
       <p className={p}>
-        Uniquement pour l&apos;organisation du mariage : connaître les personnes présentes, coordonner le voyage et le logement, vous envoyer votre confirmation et vous permettre de modifier votre réponse.
+        Uniquement pour l&apos;organisation du mariage : connaître les personnes présentes, évaluer les besoins de logement, coordonner le voyage, vous envoyer votre confirmation par e-mail et vous permettre de modifier votre réponse.
         Vous n&apos;êtes inscrit(e) à aucune newsletter et vous ne recevrez aucune communication commerciale.
       </p>
 
       <h2 className={h2}>Qui peut y accéder ?</h2>
       <p className={p}>
         Les mariés et les organisateurs désignés, via un espace protégé par authentification. Vos données ne sont ni vendues ni partagées à des fins commerciales. Pour faire fonctionner le site, nous
-        faisons appel à des prestataires techniques qui les traitent pour notre compte : Supabase (base de données), Vercel (hébergement), Resend (envoi des e-mails) et, lorsqu&apos;elle est activée, Cloudflare Turnstile (vérification anti-robots).
+        faisons appel à des prestataires techniques qui les traitent pour notre compte : Supabase (base de données), Vercel (hébergement), Resend (envoi des e-mails), et, lorsqu&apos;elle est activée, Cloudflare Turnstile (vérification anti-robots).
       </p>
 
       <h2 className={h2}>Comment corriger ou supprimer mes données ?</h2>
       <p className={p}>
-        À tout moment, depuis le lien personnel reçu par e-mail : vous pouvez modifier votre réponse ou la supprimer définitivement (suppression immédiate de vos informations). Si vous avez perdu ce lien,
-        utilisez « Vous avez déjà répondu ? » sous le formulaire : un nouvel e-mail contenant le lien vous sera envoyé. Vous pouvez aussi demander directement aux mariés de corriger ou d&apos;effacer vos données. Vous disposez des
+        À tout moment, depuis le lien personnel affiché après votre réponse et envoyé par e-mail : vous pouvez modifier votre réponse ou la supprimer définitivement (suppression immédiate de vos informations). Si vous avez perdu ce lien,
+        répondez à nouveau avec la même adresse e-mail : il vous sera renvoyé par e-mail. Vous pouvez aussi demander aux mariés de corriger ou d&apos;effacer vos données. Vous disposez des
         droits d&apos;accès, de rectification, d&apos;effacement et d&apos;opposition, et vous pouvez saisir l&apos;autorité de protection des données de votre pays.
       </p>
 

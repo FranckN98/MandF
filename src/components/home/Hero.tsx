@@ -1,6 +1,6 @@
 import type { PhotoData } from "@/content/photos";
 import { ButtonLink } from "@/components/ui/Button";
-import { SITE } from "@/lib/site";
+import { SITE, VENUE } from "@/lib/site";
 import { CircleGallery } from "./CircleGallery";
 
 // Entrée en CSS pur (et non en JS) : le titre reste lisible immédiatement, ce qui protège le LCP.
@@ -17,7 +17,7 @@ export function Hero({ heroPhotos }: { heroPhotos: PhotoData[] }) {
 
       <div className="mx-auto grid max-w-6xl items-center gap-14 px-5 md:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
         <div className="text-center lg:text-left">
-          <p className="animate-hero-in text-xs font-medium uppercase tracking-[0.3em] text-violet-deep">Mariage civil · Copenhague</p>
+          <p className="animate-hero-in text-xs font-medium uppercase tracking-[0.3em] text-violet-deep">Vous êtes invité(e)</p>
           <h1
             id="hero-title"
             style={enter(0.08)}
@@ -28,33 +28,40 @@ export function Hero({ heroPhotos }: { heroPhotos: PhotoData[] }) {
           <p style={enter(0.16)} className="mt-4 animate-hero-in font-display text-3xl italic text-violet-deep sm:text-4xl">
             {SITE.tagline}
           </p>
-          <p style={enter(0.24)} className="mx-auto mt-7 max-w-xl animate-hero-in text-base leading-relaxed text-ink-soft sm:text-lg lg:mx-0">
-            « Depuis notre rencontre en 2018, notre histoire a traversé plusieurs belles étapes. Après nos fiançailles et notre mariage traditionnel en 2024, puis
-            l&apos;arrivée de notre petite fille en 2025, nous franchissons une nouvelle étape : notre mariage civil à Copenhague. »
-          </p>
-          <p
-            style={enter(0.32)}
-            className="mt-7 inline-flex animate-hero-in flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm font-medium uppercase tracking-[0.2em] text-ink"
-          >
-            <span aria-hidden className="hidden h-px w-8 bg-violet sm:block" />
-            <time dateTime="2026-11-30">{SITE.dateLabel}</time>
-            <span aria-hidden className="text-violet">
-              ·
-            </span>
-            <span>{SITE.place}</span>
-          </p>
-          <div style={enter(0.4)} className="mt-9 flex animate-hero-in flex-col items-stretch gap-3 sm:flex-row sm:justify-center lg:justify-start">
-            <ButtonLink href="#histoire" variant="primary">
-              Découvrir notre histoire
-            </ButtonLink>
-            <ButtonLink href="#confirmation" variant="secondary">
-              Confirmer ma présence
+
+          <div style={enter(0.24)} className="mx-auto mt-7 max-w-xl animate-hero-in space-y-4 text-base leading-relaxed text-ink-soft sm:text-lg lg:mx-0">
+            <p>Il y a des histoires qui commencent par une rencontre et qui, au fil des années, deviennent une vie à deux, puis une famille.</p>
+            <p>Après tant de moments partagés et de belles étapes franchies, nous nous apprêtons à écrire une nouvelle page de notre histoire.</p>
+            <p>
+              Le 30 novembre 2026, nous célébrerons notre mariage civil à Copenhague et serions heureux de vous compter parmi nous pour partager ce moment.
+            </p>
+          </div>
+
+          <div style={enter(0.32)} className="mt-8 animate-hero-in border-y border-violet/20 py-5 text-ink lg:inline-block lg:pr-12">
+            <p className="font-display text-3xl font-medium sm:text-4xl">
+              <time dateTime="2026-11-30T13:00">{SITE.dateLabel} · 13h00</time>
+            </p>
+            <p className="mt-1.5 text-sm font-medium uppercase tracking-[0.2em] text-violet-deep">
+              {VENUE.name} · Danemark
+            </p>
+          </div>
+
+          <div style={enter(0.4)} className="mt-9 flex animate-hero-in flex-col items-stretch sm:flex-row sm:justify-center lg:justify-start">
+            <ButtonLink href="#confirmation" variant="primary">
+              Je confirme ma présence
             </ButtonLink>
           </div>
         </div>
 
-        <div style={enter(0.2)} className="animate-hero-in">
+        <div style={enter(0.2)} className="relative animate-hero-in">
           <CircleGallery photos={heroPhotos} />
+          <div
+            aria-hidden
+            className="absolute left-[1%] top-[6%] flex h-20 w-20 flex-col items-center justify-center rounded-full border border-violet/25 bg-white/90 text-center shadow-soft backdrop-blur sm:h-24 sm:w-24"
+          >
+            <span className="font-display text-3xl leading-none text-violet-deep">30</span>
+            <span className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.2em] text-ink-soft">nov. 2026</span>
+          </div>
         </div>
       </div>
     </section>

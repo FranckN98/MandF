@@ -33,7 +33,7 @@ export function CopenhagenGallery() {
               Découvrir <span className="italic text-violet">Copenhague</span>
             </>
           }
-          intro="L'hôtel de ville, Tivoli sous les lumières de Noël, le centre historique, Nyhavn et la ville en hiver : quelques lieux, tels qu'ils sont vraiment."
+          intro="Quelques lieux de Copenhague, tels qu'ils sont vraiment."
         />
         <div className="mt-14">
           <Gallery items={items} />

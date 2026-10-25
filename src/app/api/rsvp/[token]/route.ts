@@ -3,7 +3,7 @@ import { allowRequest, clientIp } from "@/lib/rate-limit";
 import { buildRecap } from "@/lib/recap";
 import { sendAdminNotification, sendGuestConfirmation } from "@/lib/email";
 import { deleteRsvpById, editUrlFor, findRsvpByToken, updateRsvpByInvitee } from "@/lib/rsvp-service";
-import { fieldErrors, makeRsvpSchema, rowToInput } from "@/lib/rsvp-schema";
+import { fieldErrors, guestEditSchema, rowToInput } from "@/lib/rsvp-schema";
 import { getSiteUrl } from "@/lib/site";
 import { isServiceConfigured } from "@/lib/supabase/service";
 
@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ token: string }> };
 const json = (body: Record<string, unknown>, status = 200) => NextResponse.json(body, { status });
 // L'invité a déjà donné son consentement à la création : il n'est pas redemandé à chaque modification.
-const editSchema = makeRsvpSchema({ requireConsent: false });
+const editSchema = guestEditSchema;
 
 async function guard(req: Request, token: string) {
   if (!isServiceConfigured()) return { error: json({ error: "not_configured", message: "Service indisponible." }, 503) };
@@ -39,13 +39,14 @@ export async function PUT(req: Request, { params }: Ctx) {
     const parsed = editSchema.safeParse(body);
     if (!parsed.success) return json({ error: "validation", fieldErrors: fieldErrors(parsed.error.issues) }, 400);
 
-    const row = await updateRsvpByInvitee(g.found.row.id, parsed.data);
-    const input = rowToInput(row);
-    const [guestMail] = await Promise.all([
-      sendGuestConfirmation(input, editUrlFor(row.id, g.found.version), "updated"),
-      sendAdminNotification(input, "updated", `${getSiteUrl()}/admin`),
-    ]);
-    return json({ status: "updated", recap: buildRecap(input), emailSent: guestMail.ok });
+    const updated = await updateRsvpByInvitee(g.found.row.id, parsed.data);
+    if (updated.status === "email_taken") {
+      return json({ error: "validation", fieldErrors: { email: "Cette adresse e-mail est déjà utilisée par une autre réponse." } }, 409);
+    }
+    const input = rowToInput(updated.row);
+    await sendAdminNotification(input, "updated", `${getSiteUrl()}/admin`);
+    const mail = await sendGuestConfirmation(input, editUrlFor(updated.row.id, g.found.version), true);
+    return json({ status: "updated", recap: buildRecap(input), emailSent: mail.ok });
   } catch (e) {
     console.error("[rsvp:update] échec :", e instanceof Error ? e.message : e);
     return json({ error: "server", message: "La modification n'a pas pu être enregistrée. Merci de réessayer." }, 500);

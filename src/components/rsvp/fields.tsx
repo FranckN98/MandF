@@ -163,9 +163,11 @@ interface StepperProps {
   onChange: (n: number) => void;
   hint?: string;
   error?: string;
+  /** Libellé court des boutons − / + quand le libellé visible est une question. */
+  shortLabel?: string;
 }
 
-export function Stepper({ id, label, value, min, max, onChange, hint, error }: StepperProps) {
+export function Stepper({ id, label, shortLabel, value, min, max, onChange, hint, error }: StepperProps) {
   const btn =
     "flex h-11 w-11 items-center justify-center rounded-full border border-violet-deep/25 bg-white text-xl text-violet-deep transition hover:bg-lavender disabled:opacity-40";
   return (
@@ -174,7 +176,7 @@ export function Stepper({ id, label, value, min, max, onChange, hint, error }: S
         {label}
       </label>
       <div className="flex items-center gap-3">
-        <button type="button" className={btn} aria-label={`Retirer un ${label.toLowerCase()}`} disabled={value <= min} onClick={() => onChange(value - 1)}>
+        <button type="button" className={btn} aria-label={`Diminuer : ${shortLabel ?? label}`} disabled={value <= min} onClick={() => onChange(value - 1)}>
           <span aria-hidden>−</span>
         </button>
         <input
@@ -192,7 +194,7 @@ export function Stepper({ id, label, value, min, max, onChange, hint, error }: S
           }}
           className="h-11 w-16 rounded-xl border border-line bg-white text-center text-lg tabular-nums text-ink focus:border-violet focus:outline-none focus:ring-4 focus:ring-violet/20"
         />
-        <button type="button" className={btn} aria-label={`Ajouter un ${label.toLowerCase()}`} disabled={value >= max} onClick={() => onChange(value + 1)}>
+        <button type="button" className={btn} aria-label={`Augmenter : ${shortLabel ?? label}`} disabled={value >= max} onClick={() => onChange(value + 1)}>
           <span aria-hidden>+</span>
         </button>
       </div>

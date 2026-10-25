@@ -2,9 +2,10 @@
 // (480 / 960 / 1600 px) dans public/images/places et écrit src/content/photos.generated.json (crédits + dimensions).
 // Usage : npm run photos:fetch            (PHOTO_CACHE=<dossier> pour choisir où stocker les originaux)
 import fs from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import sharp from "sharp";
-import { PHOTOS } from "./photos.config.mjs";
+import { LOCAL_PHOTOS, PHOTOS } from "./photos.config.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const cacheDir = process.env.PHOTO_CACHE ?? path.join(root, ".cache", "originals");
@@ -72,19 +73,33 @@ await fs.mkdir(outDir, { recursive: true });
 await fs.mkdir(path.dirname(manifestFile), { recursive: true });
 
 const manifest = {};
-for (const photo of PHOTOS) {
-  const info = await api(photo.title);
-  const md = info.extmetadata ?? {};
-  const license = md.LicenseShortName?.value ?? "";
-  if (!/^(CC BY|CC0|Public domain)/i.test(license) || /-(NC|ND)\b/i.test(license)) {
-    throw new Error(`Licence non autorisée pour ${photo.title} : "${license}"`);
-  }
-  const original = path.join(cacheDir, `${photo.slug}.jpg`);
-  try {
-    await fs.access(original);
-  } catch {
-    await download(info.url, original);
-    await sleep(800);
+for (const photo of [...PHOTOS, ...LOCAL_PHOTOS]) {
+  let original;
+  let credit;
+  if (photo.local) {
+    original = path.join(root, "scripts", "local-photos", photo.local);
+    credit = photo.credit;
+  } else {
+    const info = await api(photo.title);
+    const md = info.extmetadata ?? {};
+    const license = md.LicenseShortName?.value ?? "";
+    if (!/^(CC BY|CC0|Public domain)/i.test(license) || /-(NC|ND)\b/i.test(license)) {
+      throw new Error(`Licence non autorisée pour ${photo.title} : "${license}"`);
+    }
+    original = path.join(cacheDir, `${photo.slug}.jpg`);
+    try {
+      await fs.access(original);
+    } catch {
+      await download(info.url, original);
+      await sleep(800);
+    }
+    credit = {
+      author: plain(md.Artist?.value) || "Auteur non renseigné",
+      license,
+      licenseUrl: md.LicenseUrl?.value ?? "",
+      sourceUrl: info.descriptionurl,
+      title: photo.title,
+    };
   }
 
   const meta = await sharp(original).metadata();
@@ -92,7 +107,8 @@ for (const photo of PHOTOS) {
   const width = swap ? meta.height : meta.width;
   const height = swap ? meta.width : meta.height;
 
-  const widths = WIDTHS.filter((w) => w <= width);
+  // Les photos fournies, plus petites que 1600 px, gardent leur largeur d'origine comme plus grande variante.
+  const widths = photo.local ? [...new Set([...WIDTHS.filter((w) => w < width), width])] : WIDTHS.filter((w) => w <= width);
   if (widths.length === 0) widths.push(width);
   for (const w of widths) {
     await sharp(original)
@@ -111,15 +127,10 @@ for (const photo of PHOTOS) {
     alt: photo.alt,
     caption: photo.caption,
     lqip: `data:image/webp;base64,${lqip.toString("base64")}`,
-    credit: {
-      author: plain(md.Artist?.value) || "Auteur non renseigné",
-      license,
-      licenseUrl: md.LicenseUrl?.value ?? "",
-      sourceUrl: info.descriptionurl,
-      title: photo.title,
-    },
+    version: createHash("sha1").update(await fs.readFile(original)).digest("hex").slice(0, 8),
+    credit,
   };
-  console.log(`ok  ${photo.slug}  ${width}x${height}  ${license}  (${manifest[photo.slug].credit.author})`);
+  console.log(`ok  ${photo.slug}  ${width}x${height}  ${credit.license}  (${credit.author})`);
 }
 
 await fs.writeFile(manifestFile, JSON.stringify(manifest, null, 2) + "\n", "utf8");

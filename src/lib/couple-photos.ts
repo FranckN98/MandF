@@ -42,6 +42,7 @@ interface ManifestEntry {
   lqip?: string;
   alt?: string;
   focus?: string;
+  version?: string;
 }
 
 export type CouplePhotos = Partial<Record<CoupleSlot, PhotoData>>;
@@ -66,6 +67,7 @@ export function getCouplePhotos(): CouplePhotos {
       lqip: m.lqip,
       alt: m.alt || DEFAULT_ALT[slot],
       focus: m.focus,
+      version: m.version,
     };
   }
   return out;

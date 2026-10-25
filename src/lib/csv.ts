@@ -1,29 +1,23 @@
-import {
-  ACCOMMODATION_SHORT,
-  ATTENDANCE_SHORT,
-  DINNER_SHORT,
-  type RsvpRow,
-} from "./rsvp-schema";
+import { ACCOMMODATION_SHORT, ATTENDANCE_SHORT, DINNER_SHORT, type RsvpRow } from "./rsvp-schema";
+import { rowHousingPeople, rowParticipants } from "./stats";
 
 const HEADERS = [
   "Prénom",
   "Nom",
   "E-mail",
-  "WhatsApp",
   "Présence",
+  "Participants (total)",
+  "Adultes (total)",
+  "Enfants",
+  "Prénoms des accompagnants",
   "Arrivée",
   "Départ",
-  "Jours",
   "Nuits",
-  "Dates fixées",
-  "Logement",
-  "Intéressé(e) logement commun",
-  "Adultes",
-  "Enfants",
-  "Âge des enfants",
-  "Remarques logement",
-  "Dîner",
-  "Commentaires",
+  "Logement commun",
+  "Personnes à loger",
+  "WhatsApp (anciennes réponses)",
+  "Dîner (anciennes réponses)",
+  "Commentaires (anciennes réponses)",
   "Consentement le",
   "Réponse créée le",
   "Dernière modification",
@@ -41,24 +35,23 @@ function cell(value: string | number | null | undefined): string {
 export function toCsv(rows: RsvpRow[]): string {
   const lines = [HEADERS.join(";")];
   for (const r of rows) {
+    const coming = r.attendance_status !== "no";
     lines.push(
       [
         r.first_name,
         r.last_name,
         r.email,
-        r.whatsapp,
         ATTENDANCE_SHORT[r.attendance_status],
+        coming ? rowParticipants(r) : "",
+        coming ? r.accompanying_adults : "",
+        coming ? r.accompanying_children : "",
+        r.companion_names,
         r.arrival_date,
         r.departure_date,
-        r.stay_days,
         r.stay_nights,
-        r.travel_dates_confirmed ? "Oui" : "Non",
         r.accommodation_status ? ACCOMMODATION_SHORT[r.accommodation_status] : "",
-        r.interested_in_shared_accommodation ? "Oui" : "Non",
-        r.accompanying_adults,
-        r.accompanying_children,
-        r.children_ages,
-        r.accommodation_notes,
+        coming && r.accommodation_status === "interested" ? rowHousingPeople(r) : "",
+        r.whatsapp,
         r.dinner_status ? DINNER_SHORT[r.dinner_status] : "",
         r.comments,
         r.privacy_consent_at,

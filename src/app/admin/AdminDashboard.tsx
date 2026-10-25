@@ -7,18 +7,18 @@ import { FieldShell } from "@/components/rsvp/fields";
 import { RsvpForm, type SubmitOutcome } from "@/components/rsvp/RsvpForm";
 import { inputToValues } from "@/components/rsvp/form-values";
 import { formatDateFr } from "@/lib/dates";
-import { partyLabel, stayLabel } from "@/lib/recap";
+import { participantsLabel, stayLabel } from "@/lib/recap";
 import {
   ACCOMMODATION_LABELS,
   ACCOMMODATION_SHORT,
   ATTENDANCE_SHORT,
   DINNER_SHORT,
   rowToInput,
+  whatsappLink,
   type Attendance,
   type RsvpRow,
 } from "@/lib/rsvp-schema";
-import { ACCOMMODATION_STATUS, DINNER_VENUE_STATUS, type SiteSettings } from "@/lib/settings-schema";
-import { computeNightlyNeeds, computeStats } from "@/lib/stats";
+import { computeNightlyNeeds, computeStats, rowHousingPeople, rowParticipants } from "@/lib/stats";
 import { SignOutButton } from "./LoginForm";
 
 type LodgingFilter = "all" | "interested" | "not_interested" | "undecided";
@@ -47,10 +47,9 @@ const dateCell = (iso: string | null) => (iso ? formatDateFr(iso, { year: false 
 interface DashboardProps {
   adminEmail: string;
   initialRows: RsvpRow[];
-  initialSettings: SiteSettings;
 }
 
-export function AdminDashboard({ adminEmail, initialRows, initialSettings }: DashboardProps) {
+export function AdminDashboard({ adminEmail, initialRows }: DashboardProps) {
   const router = useRouter();
   const [rows, setRows] = useState<RsvpRow[]>(initialRows);
   const [refreshing, setRefreshing] = useState(false);
@@ -102,7 +101,8 @@ export function AdminDashboard({ adminEmail, initialRows, initialSettings }: Das
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     const list = rows.filter((r) => {
-      if (q && !`${r.first_name} ${r.last_name} ${r.last_name} ${r.first_name} ${r.email}`.toLowerCase().includes(q)) return false;
+      const phone = (r.whatsapp ?? "").replace(/\D/g, "");
+      if (q && !`${r.first_name} ${r.last_name} ${r.last_name} ${r.first_name} ${r.email ?? ""} ${r.whatsapp ?? ""} ${phone}`.toLowerCase().includes(q)) return false;
       if (attendance !== "all" && r.attendance_status !== attendance) return false;
       if (lodging === "interested" && r.accommodation_status !== "interested") return false;
       if (lodging === "not_interested" && !(r.accommodation_status === "own" || r.accommodation_status === "individual")) return false;
@@ -167,16 +167,11 @@ export function AdminDashboard({ adminEmail, initialRows, initialSettings }: Das
           </h2>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
             <StatCard label="Réponses reçues" value={stats.total} />
-            <StatCard label="Participants confirmés" value={stats.confirmed} tone="accent" />
+            <StatCard label="Participants attendus" value={stats.participantsConfirmed} tone="accent" hint={`${stats.confirmed} réponse${stats.confirmed > 1 ? "s" : ""} « Oui », accompagnants compris`} />
             <StatCard label="Absents" value={stats.absent} />
-            <StatCard label="Indécis" value={stats.undecided} />
-            <StatCard label="Intéressés par le logement commun" value={stats.sharedInterestedResponses} hint="réponses (présents et indécis)" />
-            <StatCard
-              label="Personnes à héberger"
-              value={stats.sharedPeople}
-              hint={`${stats.sharedAdults} adulte${stats.sharedAdults > 1 ? "s" : ""} · ${stats.sharedChildren} enfant${stats.sharedChildren > 1 ? "s" : ""}`}
-            />
-            <StatCard label="Intéressés par le dîner" value={stats.dinnerYes} hint={`${stats.dinnerToConfirm} à confirmer`} />
+            <StatCard label="Indécis" value={stats.undecided} hint={`${stats.participantsMaybe} personne${stats.participantsMaybe > 1 ? "s" : ""} concernée${stats.participantsMaybe > 1 ? "s" : ""}`} />
+            <StatCard label="Intéressés par le logement commun" value={stats.sharedInterestedResponses} hint={`${stats.sharedUndecidedResponses} ne savent pas encore`} />
+            <StatCard label="Personnes à héberger" value={stats.sharedPeople} hint="répondants et accompagnants" tone="accent" />
           </div>
         </section>
 
@@ -184,22 +179,16 @@ export function AdminDashboard({ adminEmail, initialRows, initialSettings }: Das
           <h2 id="nights-title" className="font-display text-2xl font-medium text-ink">
             Besoin de logement commun par nuit
           </h2>
-          <p className="mt-1 text-sm text-ink-soft">Calculé selon les dates déclarées et le nombre de voyageurs (adultes + enfants) des personnes intéressées.</p>
+          <p className="mt-1 text-sm text-ink-soft">Calculé selon les dates déclarées et le nombre de personnes à loger indiqué par chaque répondant intéressé.</p>
           <div className="mt-5 overflow-x-auto">
-            <table className="w-full min-w-[32rem] text-left text-sm">
+            <table className="w-full min-w-[24rem] text-left text-sm">
               <thead>
                 <tr className="border-b border-line text-xs uppercase tracking-[0.12em] text-ink-soft">
                   <th scope="col" className="py-2 pr-4 font-medium">
                     Nuit
                   </th>
                   <th scope="col" className="py-2 pr-4 font-medium">
-                    Personnes intéressées
-                  </th>
-                  <th scope="col" className="py-2 pr-4 font-medium">
-                    Adultes
-                  </th>
-                  <th scope="col" className="py-2 pr-4 font-medium">
-                    Enfants
+                    Personnes à héberger
                   </th>
                   <th scope="col" className="py-2 font-medium">
                     dont indécis
@@ -213,8 +202,6 @@ export function AdminDashboard({ adminEmail, initialRows, initialSettings }: Das
                       {n.label}
                     </th>
                     <td className="py-3 pr-4 font-display text-2xl text-violet-deep">{n.people}</td>
-                    <td className="py-3 pr-4 text-ink-soft">{n.adults}</td>
-                    <td className="py-3 pr-4 text-ink-soft">{n.children}</td>
                     <td className="py-3 text-ink-soft">{n.tentativePeople}</td>
                   </tr>
                 ))}
@@ -293,11 +280,11 @@ export function AdminDashboard({ adminEmail, initialRows, initialSettings }: Das
           </details>
 
           <div className="mt-5 overflow-x-auto">
-            <table className="w-full min-w-[60rem] text-left text-sm">
+            <table className="w-full min-w-[64rem] text-left text-sm">
               <caption className="sr-only">Liste des réponses des invités</caption>
               <thead>
                 <tr className="border-b border-line text-xs uppercase tracking-[0.12em] text-ink-soft">
-                  {["Nom et prénom", "Présence", "Arrivée", "Départ", "Jours", "Nuits", "Logement commun", "Accompagnants", "Dîner", "Confirmé le", ""].map((h, i) => (
+                  {["Nom et prénom", "E-mail", "Présence", "Participants", "Arrivée", "Départ", "Nuits", "Logement commun", "Personnes à loger", "Confirmé le", ""].map((h, i) => (
                     <th key={i} scope="col" className="whitespace-nowrap py-2 pr-4 font-medium">
                       {h || <span className="sr-only">Actions</span>}
                     </th>
@@ -310,18 +297,16 @@ export function AdminDashboard({ adminEmail, initialRows, initialSettings }: Das
                     <th scope="row" className="py-3 pr-4 font-medium text-ink">
                       {r.last_name.toUpperCase()} {r.first_name}
                     </th>
+                    <td className="py-3 pr-4 text-ink-soft">{r.email ?? (r.whatsapp ? `WhatsApp ${r.whatsapp}` : "—")}</td>
                     <td className="py-3 pr-4">
                       <AttendanceBadge status={r.attendance_status} />
                     </td>
+                    <td className="py-3 pr-4 text-ink-soft">{r.attendance_status === "no" ? "—" : rowParticipants(r)}</td>
                     <td className="whitespace-nowrap py-3 pr-4 text-ink-soft">{dateCell(r.arrival_date)}</td>
                     <td className="whitespace-nowrap py-3 pr-4 text-ink-soft">{dateCell(r.departure_date)}</td>
-                    <td className="py-3 pr-4 text-ink-soft">{r.stay_days ?? "—"}</td>
                     <td className="py-3 pr-4 text-ink-soft">{r.stay_nights ?? "—"}</td>
                     <td className="py-3 pr-4 text-ink-soft">{r.accommodation_status ? ACCOMMODATION_SHORT[r.accommodation_status] : "—"}</td>
-                    <td className="py-3 pr-4 text-ink-soft">
-                      {r.accommodation_status === "interested" ? r.accompanying_adults - 1 + r.accompanying_children : "—"}
-                    </td>
-                    <td className="py-3 pr-4 text-ink-soft">{r.dinner_status ? DINNER_SHORT[r.dinner_status] : "—"}</td>
+                    <td className="py-3 pr-4 text-ink-soft">{r.attendance_status !== "no" && r.accommodation_status === "interested" ? rowHousingPeople(r) : "—"}</td>
                     <td className="whitespace-nowrap py-3 pr-4 text-ink-soft">{new Date(r.created_at).toLocaleDateString("fr-FR")}</td>
                     <td className="py-3 text-right">
                       <Button variant="ghost" size="md" onClick={() => setSelectedId(r.id)}>
@@ -341,8 +326,6 @@ export function AdminDashboard({ adminEmail, initialRows, initialSettings }: Das
             </table>
           </div>
         </section>
-
-        <SettingsPanel initial={initialSettings} />
       </main>
 
       {selected ? (
@@ -376,6 +359,8 @@ function DetailDrawer({
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [editLink, setEditLink] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -433,19 +418,44 @@ function DetailDrawer({
   };
 
   const input = rowToInput(row);
+
+  const makeEditLink = async () => {
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/rsvps/${row.id}/link`, { cache: "no-store" });
+      const data = (await res.json().catch(() => ({}))) as { url?: string };
+      if (!res.ok || !data.url) throw new Error("link");
+      setEditLink(data.url);
+    } catch {
+      setError("Impossible de générer le lien.");
+    }
+  };
+  const coming = row.attendance_status !== "no";
+  const legacy: Array<[string, string | null]> = [
+    ["WhatsApp (ancienne réponse)", row.whatsapp],
+    ["Âge des enfants (ancienne réponse)", row.children_ages],
+    ["Remarques logement (ancienne réponse)", row.accommodation_notes],
+    ["Dîner (ancienne réponse)", row.dinner_status ? DINNER_SHORT[row.dinner_status] : null],
+    ["Précisions (ancienne réponse)", row.comments],
+  ];
   const details: Array<[string, string]> = [
-    ["E-mail", row.email],
-    ["WhatsApp", row.whatsapp ?? "—"],
-    ["Voyage", row.attendance_status === "no" ? "—" : stayLabel(row.arrival_date, row.departure_date)],
+    ["E-mail", row.email ?? "—"],
+    ["Participants", coming ? participantsLabel(Math.max(0, row.accompanying_adults - 1), row.accompanying_children) : "—"],
+    ["Prénoms des accompagnants", row.companion_names ?? "—"],
+    ["Séjour", coming ? stayLabel(row.arrival_date, row.departure_date) : "—"],
     ["Logement commun", row.accommodation_status ? ACCOMMODATION_LABELS[row.accommodation_status] : "—"],
-    ["Personnes à héberger", row.accommodation_status === "interested" ? partyLabel(row.accompanying_adults, row.accompanying_children, row.children_ages) : "—"],
-    ["Remarques logement", row.accommodation_notes ?? "—"],
-    ["Dîner", row.dinner_status ? DINNER_SHORT[row.dinner_status] : "—"],
-    ["Précisions", row.comments ?? "—"],
+    ["Personnes à loger", coming && row.accommodation_status === "interested" ? String(rowHousingPeople(row)) : "—"],
+    ...legacy.filter((l): l is [string, string] => Boolean(l[1])),
     ["Consentement", new Date(row.privacy_consent_at).toLocaleString("fr-FR")],
     ["Réponse créée", new Date(row.created_at).toLocaleString("fr-FR")],
     ["Dernière modification", new Date(row.updated_at).toLocaleString("fr-FR")],
   ];
+  const shareText = `Bonjour ${row.first_name}, voici votre lien pour modifier votre réponse au mariage de Marleine & Franck : ${editLink ?? ""}`;
+  const shareHref = row.whatsapp
+    ? whatsappLink(row.whatsapp, shareText)
+    : row.email
+      ? `mailto:${row.email}?subject=${encodeURIComponent("Votre réponse au mariage de Marleine & Franck")}&body=${encodeURIComponent(shareText)}`
+      : null;
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-ink/50 backdrop-blur-sm" onClick={onClose}>
@@ -505,6 +515,42 @@ function DetailDrawer({
                 </Button>
               )}
             </div>
+            <div className="mt-6 rounded-2xl bg-blush p-4">
+              <p className="text-sm font-medium text-ink">Lien personnel de modification</p>
+              <p className="mt-1 text-xs leading-relaxed text-ink-soft">
+                À transmettre à l&apos;invité s&apos;il a perdu le sien. Il lui permet de modifier ou de supprimer sa réponse.
+              </p>
+              {editLink ? (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Button
+                    size="md"
+                    variant="secondary"
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText(editLink);
+                        setCopied(true);
+                      } catch {
+                        setCopied(false);
+                      }
+                    }}
+                  >
+                    {copied ? "Lien copié" : "Copier le lien"}
+                  </Button>
+                  {shareHref ? (
+                    <ButtonLink size="md" variant="primary" href={shareHref} target="_blank" rel="noopener noreferrer">
+                      {row.whatsapp ? "Envoyer sur WhatsApp" : "Envoyer par e-mail"}
+                      <span className="sr-only"> (nouvel onglet)</span>
+                    </ButtonLink>
+                  ) : null}
+                </div>
+              ) : (
+                <div className="mt-3">
+                  <Button size="md" variant="secondary" onClick={makeEditLink}>
+                    Générer le lien
+                  </Button>
+                </div>
+              )}
+            </div>
             {error ? (
               <p role="alert" className="mt-3 text-sm font-medium text-[#a6264f]">
                 {error}
@@ -514,90 +560,5 @@ function DetailDrawer({
         )}
       </div>
     </div>
-  );
-}
-
-function SettingsPanel({ initial }: { initial: SiteSettings }) {
-  const [s, setS] = useState<SiteSettings>(initial);
-  const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
-  const [message, setMessage] = useState<string | null>(null);
-
-  const save = async () => {
-    setState("saving");
-    setMessage(null);
-    try {
-      const res = await fetch("/api/admin/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(s) });
-      const data = (await res.json().catch(() => ({}))) as { message?: string };
-      if (res.ok) {
-        setState("saved");
-        return;
-      }
-      setMessage(data.message ?? "Enregistrement impossible.");
-    } catch {
-      setMessage("Connexion impossible.");
-    }
-    setState("error");
-  };
-
-  const set = <K extends keyof SiteSettings>(key: K, value: SiteSettings[K]) => {
-    setS((v) => ({ ...v, [key]: value }));
-    setState("idle");
-  };
-
-  return (
-    <section aria-labelledby="settings-title" className="rounded-3xl bg-white p-5 shadow-card sm:p-7">
-      <h2 id="settings-title" className="font-display text-2xl font-medium text-ink">
-        Informations du site
-      </h2>
-      <p className="mt-1 text-sm text-ink-soft">
-        Mettez à jour ici l&apos;état du logement et du dîner lorsque les réservations sont confirmées. Tant que rien n&apos;est confirmé, le site affiche « en cours d&apos;organisation » / « à confirmer ».
-      </p>
-
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        <div className="space-y-4">
-          <h3 className="font-medium text-ink">Logement commun</h3>
-          <FieldShell id="s-acc-status" label="Statut">
-            <select id="s-acc-status" className={selectClass} value={s.accommodationStatus} onChange={(e) => set("accommodationStatus", e.target.value as SiteSettings["accommodationStatus"])}>
-              {ACCOMMODATION_STATUS.map((v) => (
-                <option key={v} value={v}>
-                  {v === "in_progress" ? "En cours d'organisation" : "Hébergement confirmé"}
-                </option>
-              ))}
-            </select>
-          </FieldShell>
-          <FieldShell id="s-acc-name" label="Nom / adresse du logement confirmé" optional hint="Affiché uniquement si le statut est « confirmé ».">
-            <input id="s-acc-name" className={selectClass} value={s.accommodationName} maxLength={200} onChange={(e) => set("accommodationName", e.target.value)} />
-          </FieldShell>
-          <FieldShell id="s-acc-details" label="Coût et conditions">
-            <textarea id="s-acc-details" rows={3} className={selectClass} value={s.accommodationDetails} maxLength={1000} onChange={(e) => set("accommodationDetails", e.target.value)} />
-          </FieldShell>
-        </div>
-        <div className="space-y-4">
-          <h3 className="font-medium text-ink">Dîner de mariage</h3>
-          <FieldShell id="s-dinner-status" label="Statut du restaurant">
-            <select id="s-dinner-status" className={selectClass} value={s.dinnerStatus} onChange={(e) => set("dinnerStatus", e.target.value as SiteSettings["dinnerStatus"])}>
-              {DINNER_VENUE_STATUS.map((v) => (
-                <option key={v} value={v}>
-                  {v === "to_confirm" ? "Réservation à confirmer" : "Réservation confirmée"}
-                </option>
-              ))}
-            </select>
-          </FieldShell>
-          <FieldShell id="s-dinner-details" label="Modalités et participation financière">
-            <textarea id="s-dinner-details" rows={5} className={selectClass} value={s.dinnerDetails} maxLength={1000} onChange={(e) => set("dinnerDetails", e.target.value)} />
-          </FieldShell>
-        </div>
-      </div>
-
-      <div className="mt-6 flex flex-wrap items-center gap-4">
-        <Button size="md" onClick={save} disabled={state === "saving"}>
-          {state === "saving" ? "Enregistrement…" : "Enregistrer"}
-        </Button>
-        <p role="status" className="text-sm">
-          {state === "saved" ? <span className="text-emerald-800">Enregistré. Le site se met à jour en moins d&apos;une minute.</span> : null}
-          {state === "error" ? <span className="font-medium text-[#a6264f]">{message}</span> : null}
-        </p>
-      </div>
-    </section>
   );
 }

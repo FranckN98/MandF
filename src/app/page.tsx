@@ -9,13 +9,11 @@ import { Travel } from "@/components/home/Travel";
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { COUPLE_SLOTS, getCouplePhotos } from "@/lib/couple-photos";
-import { getSiteSettings } from "@/lib/site-settings";
 
-// Page statique régénérée toutes les minutes : les statuts modifiés depuis /admin apparaissent rapidement.
+// Page statique régénérée toutes les minutes.
 export const revalidate = 60;
 
-export default async function HomePage() {
-  const settings = await getSiteSettings();
+export default function HomePage() {
   const couple = getCouplePhotos();
   const heroPhotos = COUPLE_SLOTS.filter((s) => s.startsWith("hero-"))
     .map((s) => couple[s])
@@ -28,11 +26,11 @@ export default async function HomePage() {
         <Hero heroPhotos={heroPhotos} />
         <Story couple={couple} />
         <DayOfWedding />
-        <Program settings={settings} />
+        <Program />
         <CopenhagenGallery />
-        <Lodging settings={settings} />
+        <Lodging />
         <Travel />
-        <Rsvp settings={settings} />
+        <Rsvp />
       </main>
       <Footer />
     </>

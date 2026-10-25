@@ -35,7 +35,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
     .maybeSingle();
 
   if (error?.code === "23505") {
-    return NextResponse.json({ error: "validation", fieldErrors: { email: "Cette adresse e-mail est déjà utilisée." } }, { status: 409 });
+    return NextResponse.json({ error: "validation", fieldErrors: { email: "Cette adresse e-mail est déjà utilisée par une autre réponse." } }, { status: 409 });
   }
   if (error) return NextResponse.json({ error: "server", message: "Modification impossible." }, { status: 500 });
   if (!data) return NextResponse.json({ error: "not_found" }, { status: 404 });

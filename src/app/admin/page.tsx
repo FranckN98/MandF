@@ -4,7 +4,6 @@ import { PageShell } from "@/components/layout/PageShell";
 import { getAdminSession } from "@/lib/admin-auth";
 import { RSVP_COLUMNS } from "@/lib/rsvp-service";
 import type { RsvpRow } from "@/lib/rsvp-schema";
-import { mergeSettings } from "@/lib/settings-schema";
 import { isAuthConfigured } from "@/lib/supabase/server";
 import { SignOutButton } from "./LoginForm";
 import { AdminDashboard } from "./AdminDashboard";
@@ -28,10 +27,7 @@ export default async function AdminPage() {
     );
   }
 
-  const [rsvps, settings] = await Promise.all([
-    admin.client.from("wedding_rsvps").select(RSVP_COLUMNS).order("created_at", { ascending: false }),
-    admin.client.from("site_settings").select("value").eq("key", "content").maybeSingle(),
-  ]);
+  const rsvps = await admin.client.from("wedding_rsvps").select(RSVP_COLUMNS).order("created_at", { ascending: false });
 
   if (rsvps.error) {
     return (
@@ -44,11 +40,5 @@ export default async function AdminPage() {
     );
   }
 
-  return (
-    <AdminDashboard
-      adminEmail={admin.email}
-      initialRows={(rsvps.data ?? []) as unknown as RsvpRow[]}
-      initialSettings={mergeSettings(settings.data?.value)}
-    />
-  );
+  return <AdminDashboard adminEmail={admin.email} initialRows={(rsvps.data ?? []) as unknown as RsvpRow[]} />;
 }

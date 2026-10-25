@@ -88,7 +88,7 @@ export function Navbar() {
         <a href="#top" className="flex items-baseline gap-3 font-display text-2xl italic text-violet-deep" aria-label="Marleine & Franck — retour en haut">
           M<span className="not-italic">&amp;</span>F
           {currentLabel ? (
-            <span className="font-sans text-[11px] font-medium not-italic uppercase tracking-[0.2em] text-ink-soft lg:hidden">{currentLabel}</span>
+            <span className="hidden font-sans text-[11px] font-medium not-italic uppercase tracking-[0.2em] text-ink-soft sm:inline lg:hidden">{currentLabel}</span>
           ) : null}
         </a>
 
@@ -118,21 +118,30 @@ export function Navbar() {
           })}
         </ul>
 
-        <button
-          ref={toggleRef}
-          type="button"
-          aria-expanded={open}
-          aria-controls="menu-mobile"
-          onClick={() => setOpen((v) => !v)}
-          className="relative flex h-11 items-center gap-2 rounded-full border border-violet-deep/20 bg-white/70 px-4 text-sm font-medium text-violet-deep lg:hidden"
-        >
-          <span>{open ? "Fermer" : "Menu"}</span>
-          <span aria-hidden className="flex h-3 w-4 flex-col justify-between">
-            <span className={`h-px w-full bg-current transition-transform duration-300 ${open ? "translate-y-[5.5px] rotate-45" : ""}`} />
-            <span className={`h-px w-full bg-current transition-opacity duration-300 ${open ? "opacity-0" : ""}`} />
-            <span className={`h-px w-full bg-current transition-transform duration-300 ${open ? "-translate-y-[5.5px] -rotate-45" : ""}`} />
-          </span>
-        </button>
+        <div className="flex items-center gap-2">
+          <a
+            href="#confirmation"
+            className="inline-flex h-11 items-center rounded-full bg-violet px-4 text-sm font-medium text-white shadow-soft transition hover:bg-violet-deep lg:px-5"
+          >
+            <span className="lg:hidden">Confirmer</span>
+            <span className="hidden lg:inline">Je confirme ma présence</span>
+          </a>
+          <button
+            ref={toggleRef}
+            type="button"
+            aria-expanded={open}
+            aria-controls="menu-mobile"
+            onClick={() => setOpen((v) => !v)}
+            className="relative flex h-11 items-center gap-2 rounded-full border border-violet-deep/20 bg-white/70 px-4 text-sm font-medium text-violet-deep lg:hidden"
+          >
+            <span>{open ? "Fermer" : "Menu"}</span>
+            <span aria-hidden className="flex h-3 w-4 flex-col justify-between">
+              <span className={`h-px w-full bg-current transition-transform duration-300 ${open ? "translate-y-[5.5px] rotate-45" : ""}`} />
+              <span className={`h-px w-full bg-current transition-opacity duration-300 ${open ? "opacity-0" : ""}`} />
+              <span className={`h-px w-full bg-current transition-transform duration-300 ${open ? "-translate-y-[5.5px] -rotate-45" : ""}`} />
+            </span>
+          </button>
+        </div>
       </nav>
 
       <motion.div aria-hidden style={{ scaleX: progress }} className="h-0.5 origin-left bg-gradient-to-r from-rose-deep via-violet to-violet-deep" />

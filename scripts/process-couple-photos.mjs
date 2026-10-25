@@ -3,6 +3,7 @@
 // 2) (Optionnel) Réglez le texte alternatif et le point de cadrage dans public/images/couple/settings.json.
 // 3) npm run photos. Les photos sont seulement redimensionnées : jamais retouchées, déformées ni générées.
 import fs from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import sharp from "sharp";
 
@@ -65,6 +66,7 @@ for (const file of files.sort()) {
     height,
     widths,
     lqip: `data:image/webp;base64,${lqip.toString("base64")}`,
+    version: createHash("sha1").update(await fs.readFile(source)).digest("hex").slice(0, 8),
     ...(settings[name]?.alt ? { alt: settings[name].alt } : {}),
     ...(settings[name]?.focus ? { focus: settings[name].focus } : {}),
   };

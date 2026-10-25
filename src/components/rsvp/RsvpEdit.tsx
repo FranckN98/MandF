@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Button, ButtonLink } from "@/components/ui/Button";
-import type { RecapLine } from "@/lib/recap";
 import { RsvpForm, type SubmitOutcome } from "./RsvpForm";
 import type { FormValues } from "./form-values";
 import { ThankYou, type SubmissionResult } from "./ThankYou";
@@ -10,10 +9,9 @@ import { ThankYou, type SubmissionResult } from "./ThankYou";
 interface RsvpEditProps {
   token: string;
   initialValues: FormValues;
-  dinnerNote: string;
 }
 
-export function RsvpEdit({ token, initialValues, dinnerNote }: RsvpEditProps) {
+export function RsvpEdit({ token, initialValues }: RsvpEditProps) {
   const [result, setResult] = useState<SubmissionResult | null>(null);
   const [deleted, setDeleted] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -43,14 +41,7 @@ export function RsvpEdit({ token, initialValues, dinnerNote }: RsvpEditProps) {
         fieldErrors: (data.fieldErrors as Record<string, string> | undefined) ?? undefined,
       };
     }
-    setResult({
-      status: "updated",
-      firstName: String(payload.firstName),
-      email: initialValues.email,
-      attendance: String(payload.attendance),
-      recap: (data.recap as RecapLine[] | undefined) ?? [],
-      emailSent: data.emailSent === true,
-    });
+    setResult({ status: "updated", emailSent: data.emailSent === true });
     window.scrollTo({ top: 0, behavior: "smooth" });
     return { ok: true };
   };
@@ -61,6 +52,11 @@ export function RsvpEdit({ token, initialValues, dinnerNote }: RsvpEditProps) {
     try {
       const res = await fetch(`/api/rsvp/${encodeURIComponent(token)}`, { method: "DELETE" });
       if (res.ok) {
+        try {
+          window.localStorage.removeItem("mf-rsvp-edit");
+        } catch {
+          // sans importance : le lien ne sera simplement plus valide
+        }
         setDeleted(true);
         return;
       }
@@ -106,7 +102,7 @@ export function RsvpEdit({ token, initialValues, dinnerNote }: RsvpEditProps) {
 
   return (
     <div>
-      <RsvpForm mode="edit" initialValues={initialValues} onSubmit={submit} submitLabel="Enregistrer mes modifications" dinnerNote={dinnerNote} emailReadOnly idPrefix="edit" />
+      <RsvpForm mode="edit" initialValues={initialValues} onSubmit={submit} submitLabel="Enregistrer mes modifications" idPrefix="edit" />
 
       <div className="mt-12 rounded-3xl border border-line bg-blush/60 p-6">
         <h3 className="font-display text-2xl font-medium text-ink">Supprimer ma réponse</h3>

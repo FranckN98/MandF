@@ -21,3 +21,4 @@ public/images/couple/originals/
 .DS_Store
 coverage/
 npm-debug.log*
+.env*

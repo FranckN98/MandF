@@ -6,15 +6,23 @@ export interface DashboardStats {
   confirmed: number;
   absent: number;
   undecided: number;
+  /** Personnes attendues (répondants « Oui » et leurs accompagnants, chacun compté une fois). */
+  participantsConfirmed: number;
+  /** Personnes dont la présence reste incertaine (« Je ne sais pas encore »). */
+  participantsMaybe: number;
   sharedInterestedResponses: number;
-  sharedAdults: number;
-  sharedChildren: number;
   sharedPeople: number;
-  dinnerYes: number;
-  dinnerToConfirm: number;
+  /** Réponses (présents ou indécis) qui ne savent pas encore pour le logement. */
+  sharedUndecidedResponses: number;
 }
 
 const coming = (r: RsvpRow) => r.attendance_status !== "no";
+
+/** Total des participants d'une réponse : adultes (répondant compris) + enfants. */
+export const rowParticipants = (r: RsvpRow) => r.accompanying_adults + r.accompanying_children;
+
+/** Personnes à loger : valeur déclarée, ou à défaut le total des participants (anciennes réponses). */
+export const rowHousingPeople = (r: RsvpRow) => r.accommodation_people ?? rowParticipants(r);
 
 /** Statistiques calculées uniquement à partir des réponses enregistrées. */
 export function computeStats(rows: RsvpRow[]): DashboardStats {
@@ -24,12 +32,11 @@ export function computeStats(rows: RsvpRow[]): DashboardStats {
     confirmed: rows.filter((r) => r.attendance_status === "yes").length,
     absent: rows.filter((r) => r.attendance_status === "no").length,
     undecided: rows.filter((r) => r.attendance_status === "maybe").length,
+    participantsConfirmed: rows.filter((r) => r.attendance_status === "yes").reduce((n, r) => n + rowParticipants(r), 0),
+    participantsMaybe: rows.filter((r) => r.attendance_status === "maybe").reduce((n, r) => n + rowParticipants(r), 0),
     sharedInterestedResponses: shared.length,
-    sharedAdults: shared.reduce((n, r) => n + r.accompanying_adults, 0),
-    sharedChildren: shared.reduce((n, r) => n + r.accompanying_children, 0),
-    sharedPeople: shared.reduce((n, r) => n + r.accompanying_adults + r.accompanying_children, 0),
-    dinnerYes: rows.filter((r) => coming(r) && r.dinner_status === "yes").length,
-    dinnerToConfirm: rows.filter((r) => coming(r) && r.dinner_status === "tbd").length,
+    sharedPeople: shared.reduce((n, r) => n + rowHousingPeople(r), 0),
+    sharedUndecidedResponses: rows.filter((r) => coming(r) && r.accommodation_status === "undecided").length,
   };
 }
 
@@ -37,8 +44,6 @@ export interface NightNeed {
   night: string;
   label: string;
   people: number;
-  adults: number;
-  children: number;
   /** dont personnes dont la présence est encore incertaine ("peut-être") */
   tentativePeople: number;
 }
@@ -51,17 +56,15 @@ export interface NightlyNeeds {
   datesNotFixed: number;
 }
 
-/** Besoin de logement commun par nuit, selon les dates déclarées et le nombre de voyageurs concernés. */
+/** Besoin de logement commun par nuit, selon les dates déclarées et le nombre de personnes à loger. */
 export function computeNightlyNeeds(rows: RsvpRow[], tracked: readonly string[] = TRACKED_NIGHTS): NightlyNeeds {
-  const nights = new Map<string, NightNeed>(
-    tracked.map((night) => [night, { night, label: nightLabel(night), people: 0, adults: 0, children: 0, tentativePeople: 0 }]),
-  );
+  const nights = new Map<string, NightNeed>(tracked.map((night) => [night, { night, label: nightLabel(night), people: 0, tentativePeople: 0 }]));
   let outsideWindow = 0;
   let datesNotFixed = 0;
 
   for (const r of rows) {
     if (!coming(r) || r.accommodation_status !== "interested") continue;
-    const people = r.accompanying_adults + r.accompanying_children;
+    const people = rowHousingPeople(r);
     if (!r.arrival_date || !r.departure_date) {
       datesNotFixed += people;
       continue;
@@ -74,8 +77,6 @@ export function computeNightlyNeeds(rows: RsvpRow[], tracked: readonly string[] 
         continue;
       }
       slot.people += people;
-      slot.adults += r.accompanying_adults;
-      slot.children += r.accompanying_children;
       if (r.attendance_status === "maybe") slot.tentativePeople += people;
     }
     if (outside) outsideWindow += people;

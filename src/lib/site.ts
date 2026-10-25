@@ -2,11 +2,11 @@
 
 export const SITE = {
   name: "Marleine & Franck",
-  tagline: "Notre histoire continue.",
+  tagline: "Notre histoire continue…",
   title: "Marleine & Franck — Notre histoire continue",
   description:
     "Mariage civil de Marleine & Franck le 30 novembre 2026 à Copenhague. Notre histoire, le programme de la journée, le logement, le voyage et la confirmation de présence.",
-  dateLabel: "30 Novembre 2026",
+  dateLabel: "30 novembre 2026",
   dateLong: "Lundi 30 novembre 2026",
   place: "Copenhagen, Denmark",
 } as const;
@@ -23,7 +23,8 @@ export const DINNER_VENUE = {
   name: "Restaurant Donna",
   street: "Vester Voldgade 25",
   city: "1552 Copenhagen V",
-  officialUrl: "https://cofoco.dk/da/restaurant/donna",
+  officialUrl: "https://cofoco.dk/en/restaurant/donna",
+  galleryUrl: "https://cofoco.dk/en/restaurant/donna#gallery",
   mapsUrl: "https://www.google.com/maps/search/?api=1&query=Restaurant+Donna+Vester+Voldgade+25+1552+K%C3%B8benhavn",
 } as const;
 

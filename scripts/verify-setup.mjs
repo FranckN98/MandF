@@ -1,4 +1,4 @@
-// Vérifie la configuration avant la mise en ligne : variables, base de données, protections RLS, e-mails.
+// Vérifie la configuration avant la mise en ligne : variables, base de données, protections RLS.
 // Usage : node --env-file=.env.local scripts/verify-setup.mjs
 /* eslint-disable @typescript-eslint/no-unused-expressions -- script CLI : ternaires utilisés comme instructions */
 import { createClient } from "@supabase/supabase-js";
@@ -18,8 +18,15 @@ for (const k of ["NEXT_PUBLIC_SITE_URL", "NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLI
 }
 if (env.RSVP_TOKEN_SECRET && env.RSVP_TOKEN_SECRET.length < 32) fail("RSVP_TOKEN_SECRET doit faire au moins 32 caractères");
 if (env.NEXT_PUBLIC_SITE_URL && !/^https:\/\//.test(env.NEXT_PUBLIC_SITE_URL)) warn("NEXT_PUBLIC_SITE_URL n'est pas en https (normal en local, pas en production)");
-env.RESEND_API_KEY && env.EMAIL_FROM ? ok("RESEND_API_KEY + EMAIL_FROM") : warn("e-mails désactivés (RESEND_API_KEY / EMAIL_FROM) : le lien de modification sera affiché à l'écran");
-env.ADMIN_NOTIFICATION_EMAIL ? ok("ADMIN_NOTIFICATION_EMAIL") : warn("ADMIN_NOTIFICATION_EMAIL manquante : aucune notification aux organisateurs");
+env.RESEND_API_KEY && env.EMAIL_FROM
+  ? ok("E-mails aux invités (Resend)")
+  : warn("e-mails désactivés (facultatif : RESEND_API_KEY, EMAIL_FROM) ; le lien personnel de modification reste affiché à l'écran après l'envoi du formulaire");
+env.ADMIN_NOTIFICATION_EMAIL ? ok("ADMIN_NOTIFICATION_EMAIL") : warn("ADMIN_NOTIFICATION_EMAIL absent : les organisateurs ne sont pas prévenus à chaque réponse");
+env.NEXT_PUBLIC_CONTACT_WHATSAPP
+  ? /^\+[1-9]\d{6,14}$/.test(env.NEXT_PUBLIC_CONTACT_WHATSAPP.replace(/[\s().-]/g, ""))
+    ? ok("NEXT_PUBLIC_CONTACT_WHATSAPP")
+    : fail("NEXT_PUBLIC_CONTACT_WHATSAPP doit être au format international (+4512345678)")
+  : warn("NEXT_PUBLIC_CONTACT_WHATSAPP absent : le bouton « Nous écrire sur WhatsApp » n'est pas affiché");
 env.TURNSTILE_SECRET_KEY && env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? ok("Cloudflare Turnstile") : warn("Turnstile non configuré : seuls le champ piège et la limitation de débit protègent le formulaire");
 env.CRON_SECRET ? ok("CRON_SECRET") : warn("CRON_SECRET manquant : la purge automatique est désactivée");
 if (Object.keys(env).some((k) => /^NEXT_PUBLIC_.*(SERVICE|SECRET)/i.test(k))) fail("Une variable NEXT_PUBLIC_ contient SERVICE/SECRET : elle serait exposée au navigateur");
@@ -38,6 +45,8 @@ for (const table of ["wedding_rsvps", "admin_users", "site_settings", "rate_limi
   const { error } = await service.from(table).select("*", { count: "exact", head: true });
   error ? fail(`table ${table} inaccessible (migration exécutée ?) : ${error.message}`) : ok(`table ${table}`);
 }
+const formColumns = await service.from("wedding_rsvps").select("accommodation_people,companion_names", { head: true, count: "exact" });
+formColumns.error ? fail(`migration 20261026000000_invitation_form.sql non exécutée : ${formColumns.error.message}`) : ok("colonnes du formulaire simplifié");
 const rl = await service.rpc("check_rate_limit", { p_key: "verify-setup", p_limit: 1000, p_window_seconds: 60 });
 rl.error ? fail(`fonction check_rate_limit : ${rl.error.message}`) : ok("fonction check_rate_limit");
 const { count: admins } = await service.from("admin_users").select("*", { count: "exact", head: true });
@@ -50,9 +59,9 @@ const read = await anon.from("wedding_rsvps").select("id").limit(1);
   : read.error
     ? ok("lecture anon refusée")
     : fail("la clé publique peut LIRE des réponses : vérifiez le RLS !");
-const write = await anon.from("wedding_rsvps").insert({ first_name: "x", last_name: "x", email: "verify@example.invalid", attendance_status: "no", privacy_consent_at: new Date().toISOString() });
+const write = await anon.from("wedding_rsvps").insert({ first_name: "x", last_name: "x", whatsapp: "+10000000000", attendance_status: "no", privacy_consent_at: new Date().toISOString() });
 write.error ? ok("écriture anon refusée") : fail("la clé publique peut ÉCRIRE : vérifiez le RLS !");
-if (!write.error) await service.from("wedding_rsvps").delete().eq("email", "verify@example.invalid");
+if (!write.error) await service.from("wedding_rsvps").delete().eq("whatsapp", "+10000000000");
 const rpc = await anon.rpc("check_rate_limit", { p_key: "x", p_limit: 1, p_window_seconds: 60 });
 rpc.error ? ok("check_rate_limit non appelable avec la clé publique") : fail("check_rate_limit est appelable avec la clé publique");
 

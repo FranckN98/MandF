@@ -8,6 +8,7 @@
       1500
     ],
     "lqip": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAACwAwCdASoYABAALqVut1ujKKioiICkSzAE6AFvDwxTrBra7YDAYAD+9DGdZYlbrnTEmOGaBR3wvC/OzTlYYb0/iyJfWD4e2GoFd1aHc2L9E4eyfBjVKs+ss4lVeCNT3lavBOfAj69sMAAA",
+    "version": "7464217b",
     "alt": "Franck embrasse tendrement Marleine, en gros plan",
     "focus": "60% 42%"
   },
@@ -20,6 +21,7 @@
       1000
     ],
     "lqip": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAACwBQCdASoYACQAPtFWokyoJKMiOrM4AQAaCWUAuzNowMu+1txz1oWl5FFAaPMm3tKz0KIauAAA/u1hqcCxv6/mKfiJMJN5oeKqpRCqUXhRJriEDvdLjUOyMg+kzSK1zuBVrR2tAsQKktbeCEYYJX4wHQl3Lu28CWCNwGGHRDZRKufDEqpxUzN1cOAjeRnj0K9Se2a38yN14sZlRcnEAA==",
+    "version": "62d2b141",
     "alt": "Marleine et Franck forment un cœur avec leurs mains devant un cœur gravé dans le tronc d'un arbre",
     "focus": "50% 24%"
   },
@@ -31,6 +33,7 @@
       738
     ],
     "lqip": "data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAACQBQCdASoYACAAPs1SokynpKMiN/qoAPAZiWgAt/FAAONCDQD+IpDinmyHFP7VFo1q36+Z4AD+kbeIghWbYpWKD3ghoaOuH1eOU0PICPKPrLdq1pLBNwsMHm3aoA3j9RCell6fP37W2MCbYe6OffY8uz7VY1ZXDnZxmGMFSrI4xs3rKjmQcMdQuXadS/575Htjmes6XUEvlCSxcR3ElJp+tMOxRQNBvhlmH9W/1OQzXLt4AAA=",
+    "version": "316715e6",
     "alt": "Marleine et Franck en tenues traditionnelles, assis sur des fauteuils en rotin lors de leur mariage traditionnel",
     "focus": "50% 52%"
   },
@@ -43,6 +46,7 @@
       1536
     ],
     "lqip": "data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAAAwBQCdASoYACAAPt1kqE+opaOiKAqpEBuJQBhQBr7WEcxP0UiX94vJl6IzgvCpLxNZjAD+bSTVm6CAeFRQdLUm7tDXnMCfr1s/eSi3y7ZIeF6Xw414sLtdCEUSyASl7+t/Vl6XMVH6KBW8tON+0ZLXlb2uOL/WY2NXFwZ3D10B6186e32WrY7ukAEuHv+0R921XuEeduJe2spuRaufvXhRwAA=",
+    "version": "6f79c3d6",
     "alt": "Marleine et Franck, de dos et enlacés, regardent le fleuve depuis une télécabine sous la pluie",
     "focus": "50% 42%"
   },
@@ -55,20 +59,22 @@
       1536
     ],
     "lqip": "data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAAAwBQCdASoYACAAPt1kqE+opaOiKAqpEBuJQBhQBr7WEcxP0UiX94vJl6IzgvCpLxNZjAD+bSTVm6CAeFRQdLUm7tDXnMCfr1s/eSi3y7ZIeF6Xw414sLtdCEUSyASl7+t/Vl6XMVH6KBW8tON+0ZLXlb2uOL/WY2NXFwZ3D10B6186e32WrY7ukAEuHv+0R921XuEeduJe2spuRaufvXhRwAA=",
+    "version": "6f79c3d6",
     "alt": "Marleine et Franck, de dos et enlacés, regardent le fleuve depuis une télécabine sous la pluie",
     "focus": "50% 45%"
   },
   "story-2024-a": {
-    "width": 1000,
-    "height": 1500,
+    "width": 1200,
+    "height": 1600,
     "widths": [
       480,
       960,
-      1000
+      1200
     ],
-    "lqip": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAACwBQCdASoYACQAPtFWokyoJKMiOrM4AQAaCWUAuzNowMu+1txz1oWl5FFAaPMm3tKz0KIauAAA/u1hqcCxv6/mKfiJMJN5oeKqpRCqUXhRJriEDvdLjUOyMg+kzSK1zuBVrR2tAsQKktbeCEYYJX4wHQl3Lu28CWCNwGGHRDZRKufDEqpxUzN1cOAjeRnj0K9Se2a38yN14sZlRcnEAA==",
-    "alt": "Marleine et Franck forment un cœur avec leurs mains devant un cœur gravé dans le tronc d'un arbre",
-    "focus": "50% 22%"
+    "lqip": "data:image/webp;base64,UklGRsoAAABXRUJQVlA4IL4AAABQBgCdASoYACAAPt1kqFAopSOiqAqpEBuJbACdMoR2iNgDxWfK+eE9Sm2BYIuVLr6MeMHZqP+5xlpHAAD+WsPnwg+iRCxh2jIsahAmnO2refoS43FwMi3us2G5jZdm6aCicPyS6JHTPE0AHlRgRlbEiWj2EemivntBT8IFzAoTuccnbMhifAqnkMIIzjZjdF1F0NG6bIjuMWiEzfbarhs1lT001VCjKa1wzJGuzNhECeBFKNnrt78ueN/x4AAA",
+    "version": "e3ec8df7",
+    "alt": "Marleine montre sa bague de fiançailles, dans les bras de Franck, devant une arche de roses rouges",
+    "focus": "50% 32%"
   },
   "story-2024-b": {
     "width": 738,
@@ -78,6 +84,7 @@
       738
     ],
     "lqip": "data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAACQBQCdASoYACAAPs1SokynpKMiN/qoAPAZiWgAt/FAAONCDQD+IpDinmyHFP7VFo1q36+Z4AD+kbeIghWbYpWKD3ghoaOuH1eOU0PICPKPrLdq1pLBNwsMHm3aoA3j9RCell6fP37W2MCbYe6OffY8uz7VY1ZXDnZxmGMFSrI4xs3rKjmQcMdQuXadS/575Htjmes6XUEvlCSxcR3ElJp+tMOxRQNBvhlmH9W/1OQzXLt4AAA=",
+    "version": "316715e6",
     "alt": "Marleine et Franck en tenues traditionnelles, assis sur des fauteuils en rotin lors de leur mariage traditionnel",
     "focus": "50% 40%"
   }

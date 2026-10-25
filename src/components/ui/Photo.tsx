@@ -1,4 +1,4 @@
-import type { PhotoData } from "@/content/photos";
+import { photoUrl, type PhotoData } from "@/content/photos";
 
 interface PhotoProps {
   photo: PhotoData;
@@ -13,7 +13,7 @@ interface PhotoProps {
 /** Image responsive pré-optimisée (WebP 480 / 960 / 1600) avec aperçu flouté, chargement différé hors première vue. */
 export function Photo({ photo, sizes, priority = false, className = "", imgClassName = "", alt }: PhotoProps) {
   const widths = [...photo.widths].sort((a, b) => a - b);
-  const srcSet = widths.map((w) => `${photo.src}-${w}.webp ${w}w`).join(", ");
+  const srcSet = widths.map((w) => `${photoUrl(photo, w)} ${w}w`).join(", ");
   const fallback = widths.find((w) => w >= 960) ?? widths[widths.length - 1];
   return (
     <span
@@ -22,7 +22,7 @@ export function Photo({ photo, sizes, priority = false, className = "", imgClass
     >
       {/* eslint-disable-next-line @next/next/no-img-element -- variantes WebP pré-générées, srcset manuel */}
       <img
-        src={`${photo.src}-${fallback}.webp`}
+        src={photoUrl(photo, fallback)}
         srcSet={srcSet}
         sizes={sizes}
         width={photo.width}

@@ -12,15 +12,15 @@ export function Story({ couple }: { couple: CouplePhotos }) {
     {
       id: "2018",
       marker: "2018",
-      title: "Notre rencontre",
-      text: "C'est en 2018 que notre histoire a commencé. Une rencontre qui a marqué le début de notre chemin ensemble.",
+      title: "Là où tout a commencé",
+      text: "C'est sur les bancs de l'université, à Bingen am Rhein, que nos chemins se sont croisés en 2018. Une rencontre qui, au fil du temps, est devenue une belle histoire.",
       photos: [{ photo: couple["story-2018"], placeholder: { label: "2018", hint: "Photo de nos débuts à venir" } }],
     },
     {
       id: "2024",
       marker: "2024",
-      title: "Nos fiançailles et notre mariage traditionnel",
-      text: "En 2024, nous avons franchi une étape importante avec nos fiançailles et la célébration de notre mariage traditionnel au pays, entourés de nos familles.",
+      title: "Fiançailles & mariage traditionnel",
+      text: "En 2024, notre histoire a franchi une nouvelle étape avec nos fiançailles, suivies de notre mariage traditionnel au Cameroun, entourés de nos familles et de nos proches.",
       photos: [
         { photo: couple["story-2024-a"], caption: "Fiançailles", placeholder: { label: "Fiançailles", hint: "Photo à venir" } },
         { photo: couple["story-2024-b"], caption: "Mariage traditionnel · Cameroun", placeholder: { label: "Mariage traditionnel", hint: "Photo à venir" } },
@@ -30,15 +30,17 @@ export function Story({ couple }: { couple: CouplePhotos }) {
       id: "2025",
       marker: "2025",
       title: "Notre famille s'agrandit",
-      text: "En 2025, notre petite fille est venue agrandir notre famille et apporter un nouveau chapitre à notre histoire.",
+      text: "En 2025, l'arrivée de notre petite fille a donné une nouvelle dimension à notre histoire et à notre vie de famille.",
       photos: familyPhotos.length > 0 ? familyPhotos : [{ placeholder: { label: "2025", hint: "Photo de famille à venir" } }],
     },
     {
       id: "2026",
       marker: "2026",
-      title: "Notre mariage civil",
-      text: "Le 30 novembre 2026, nous poursuivons notre histoire en officialisant notre union civile à Copenhague.",
-      photos: [{ photo: getPlacePhoto("cityhall-night"), caption: "Copenhagen City Hall" }],
+      title: "Notre histoire continue",
+      text: "Le 30 novembre 2026, nous franchirons une nouvelle étape avec notre mariage civil à Copenhague. Une nouvelle page de cette même histoire que nous écrivons ensemble depuis 2018.",
+      photos: couple["hero-2"]
+        ? [{ photo: couple["hero-2"], caption: "Marleine & Franck" }, { photo: getPlacePhoto("cityhall-night"), caption: "Copenhagen City Hall" }]
+        : [{ photo: getPlacePhoto("cityhall-night"), caption: "Copenhagen City Hall" }],
     },
   ];
 

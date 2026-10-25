@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { allowRequest, clientIp } from "@/lib/rate-limit";
 import { buildRecap } from "@/lib/recap";
-import { sendAdminNotification, sendExistingResponseLink, sendGuestConfirmation } from "@/lib/email";
-import { createRsvp } from "@/lib/rsvp-service";
+import { sendAdminNotification, sendGuestConfirmation, sendGuestEditLink } from "@/lib/email";
+import { createRsvp, findEditUrlByEmail } from "@/lib/rsvp-service";
 import { fieldErrors, rsvpSchema } from "@/lib/rsvp-schema";
 import { getSiteUrl } from "@/lib/site";
 import { isServiceConfigured } from "@/lib/supabase/service";
@@ -52,28 +52,22 @@ export async function POST(req: Request) {
     if (!parsed.success) return json({ error: "validation", fieldErrors: fieldErrors(parsed.error.issues) }, 400);
     const input = parsed.data;
 
-    if (!(await allowRequest("rsvp-email", input.email, 6, 3600))) {
+    if (!(await allowRequest("rsvp-email", input.email ?? "", 6, 3600))) {
       return json({ error: "rate_limited", message: "Trop de tentatives pour cette adresse. Merci de réessayer plus tard." }, 429);
     }
 
     const result = await createRsvp(input);
 
     if (result.status === "exists") {
-      const mail = await sendExistingResponseLink(input.email, result.firstName, result.editUrl);
-      return json({ status: "exists", emailSent: mail.ok });
+      // Le lien personnel n'est envoyé qu'à l'adresse e-mail concernée, jamais affiché à l'écran.
+      const existingUrl = input.email ? await findEditUrlByEmail(input.email) : null;
+      const mailed = existingUrl && input.email ? (await sendGuestEditLink(input.email, existingUrl)).ok : false;
+      return json({ status: "exists", emailSent: mailed });
     }
 
-    const [guestMail] = await Promise.all([
-      sendGuestConfirmation(input, result.editUrl, "created"),
-      sendAdminNotification(input, "created", `${getSiteUrl()}/admin`),
-    ]);
-    return json({
-      status: "created",
-      recap: buildRecap(input),
-      emailSent: guestMail.ok,
-      // Si l'e-mail n'a pas pu partir, le lien est affiché une seule fois pour ne pas perdre l'accès à la réponse.
-      editUrl: guestMail.ok ? undefined : result.editUrl,
-    });
+    await sendAdminNotification(input, "created", `${getSiteUrl()}/admin`);
+    const mail = await sendGuestConfirmation(input, result.editUrl);
+    return json({ status: "created", recap: buildRecap(input), editUrl: result.editUrl, emailSent: mail.ok });
   } catch (e) {
     console.error("[rsvp] échec :", e instanceof Error ? e.message : e);
     return json({ error: "server", message: "Votre réponse n'a pas pu être enregistrée. Merci de réessayer dans un instant." }, 500);

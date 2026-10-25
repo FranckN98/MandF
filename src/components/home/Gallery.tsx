@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { PhotoData } from "@/content/photos";
+import { photoUrl, type PhotoData } from "@/content/photos";
 import { Photo } from "@/components/ui/Photo";
 
 export interface GalleryItem {
@@ -134,8 +134,8 @@ export function Gallery({ items }: { items: GalleryItem[] }) {
               {/* eslint-disable-next-line @next/next/no-img-element -- variantes WebP pré-générées */}
               <img
                 key={current.src}
-                src={`${current.src}-${widths[widths.length - 1]}.webp`}
-                srcSet={widths.map((w) => `${current.src}-${w}.webp ${w}w`).join(", ")}
+                src={photoUrl(current, widths[widths.length - 1])}
+                srcSet={widths.map((w) => `${photoUrl(current, w)} ${w}w`).join(", ")}
                 sizes="100vw"
                 alt={current.alt}
                 className="max-h-[calc(100dvh-11rem)] w-auto max-w-full rounded-2xl object-contain shadow-soft"

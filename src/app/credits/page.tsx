@@ -10,7 +10,7 @@ export default function CreditsPage() {
     <PageShell eyebrow="Photographies" title="Crédits photographiques">
       <p className="text-lg leading-relaxed text-ink-soft">
         Les photographies des lieux (hôtel de ville, Tivoli Gardens, centre historique, Nyhavn, hôtel) sont de véritables photographies, publiées sous licence libre sur Wikimedia Commons. Elles ont été redimensionnées et
-        converties au format WebP ; leur contenu n&apos;a pas été modifié. Merci à leurs auteurs.
+        converties au format WebP ; leur contenu n&apos;a pas été modifié. Merci à leurs auteurs. Les photographies du restaurant Donna restent la propriété du restaurant et de leurs auteurs.
       </p>
 
       <ul className="mt-10 divide-y divide-line rounded-3xl border border-line bg-white">

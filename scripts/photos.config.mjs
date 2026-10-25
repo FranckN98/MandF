@@ -94,3 +94,42 @@ export const PHOTOS = [
     caption: "CABINN City — Mitchellsgade",
   },
 ];
+
+// Photos fournies (dossier scripts/local-photos), sans téléchargement : le crédit est saisi à la main.
+const DONNA_CREDIT = {
+  author: "Restaurant Donna",
+  license: "Tous droits réservés",
+  licenseUrl: "",
+  sourceUrl: "https://cofoco.dk/en/restaurant/donna",
+};
+
+export const LOCAL_PHOTOS = [
+  {
+    slug: "donna-patio",
+    local: "donna-patio.jpg",
+    alt: "La cour intérieure du restaurant : sol en damier, chaises en rotin jaune et rideaux roses sous une guirlande de feuillage",
+    caption: "Restaurant Donna — la cour intérieure",
+    credit: { ...DONNA_CREDIT, title: "Restaurant Donna — la cour intérieure" },
+  },
+  {
+    slug: "donna-table",
+    local: "donna-table.jpg",
+    alt: "Une table en marbre éclairée par une petite lampe, devant une banquette rouge et des rideaux jaune orangé",
+    caption: "Restaurant Donna — une table",
+    credit: { ...DONNA_CREDIT, title: "Restaurant Donna — une table" },
+  },
+  {
+    slug: "donna-salle",
+    local: "donna-salle.jpg",
+    alt: "La salle du restaurant : banquette rouge, tables en marbre, fauteuils en velours bordeaux et grands miroirs à arcades",
+    caption: "Restaurant Donna — la salle",
+    credit: { ...DONNA_CREDIT, title: "Restaurant Donna — la salle" },
+  },
+  {
+    slug: "donna-plats",
+    local: "donna-plats.jpg",
+    alt: "Une table dressée vue du dessus, avec plusieurs plats à partager",
+    caption: "Restaurant Donna — les plats",
+    credit: { ...DONNA_CREDIT, title: "Restaurant Donna — les plats" },
+  },
+];

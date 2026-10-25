@@ -20,10 +20,12 @@ create table public.wedding_rsvps (
   id uuid primary key default gen_random_uuid(),
   first_name text not null check (char_length(btrim(first_name)) between 1 and 80),
   last_name text not null check (char_length(btrim(last_name)) between 1 and 80),
-  email text not null check (
-    email = lower(btrim(email)) and char_length(email) between 3 and 254 and position('@' in email) > 1
+  -- Le numéro WhatsApp identifie la réponse (format international normalisé : + et 7 à 15 chiffres).
+  whatsapp text not null check (whatsapp ~ '^\+[1-9][0-9]{6,14}$'),
+  -- E-mail facultatif (non demandé aux invités ; utilisable par les organisateurs).
+  email text check (
+    email is null or (email = lower(btrim(email)) and char_length(email) between 3 and 254 and position('@' in email) > 1)
   ),
-  whatsapp text check (whatsapp is null or char_length(whatsapp) between 6 and 30),
   attendance_status public.attendance_status not null,
   arrival_date date,
   departure_date date,
@@ -62,8 +64,9 @@ create table public.wedding_rsvps (
 
 comment on table public.wedding_rsvps is 'Réponses des invités au mariage civil du 30/11/2026 (données personnelles).';
 
--- Une seule réponse par adresse e-mail (l'e-mail est stocké en minuscules, imposé par le CHECK ci-dessus).
-create unique index wedding_rsvps_email_unique on public.wedding_rsvps (email);
+-- Une seule réponse par numéro WhatsApp (stocké normalisé, imposé par le CHECK ci-dessus).
+create unique index wedding_rsvps_whatsapp_unique on public.wedding_rsvps (whatsapp);
+create unique index wedding_rsvps_email_unique on public.wedding_rsvps (email) where email is not null;
 create index wedding_rsvps_attendance_idx on public.wedding_rsvps (attendance_status);
 create index wedding_rsvps_created_idx on public.wedding_rsvps (created_at desc);
 

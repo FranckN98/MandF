@@ -4,6 +4,8 @@ import { buildRecap } from "./recap";
 import type { RsvpInput } from "./rsvp-schema";
 import { SITE, VENUE } from "./site";
 
+// Envoi via Resend (facultatif) : notifications aux organisateurs, confirmation et lien personnel à l'invité.
+// Sans configuration, rien n'est envoyé et le site continue de fonctionner (le lien reste affiché à l'écran).
 export type MailResult = { ok: true } | { ok: false; reason: "not_configured" | "failed" };
 
 const escapeHtml = (s: string) =>
@@ -16,16 +18,12 @@ function adminRecipients(): string[] {
     .filter(Boolean);
 }
 
-export function emailConfigured(): boolean {
-  return Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_FROM);
-}
-
-async function send(to: string | string[], subject: string, html: string, text: string, replyTo: string[] = []): Promise<MailResult> {
+async function send(to: string[], subject: string, html: string, text: string): Promise<MailResult> {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM;
   if (!apiKey || !from) return { ok: false, reason: "not_configured" };
   try {
-    const { error } = await new Resend(apiKey).emails.send({ from, to, subject, html, text, ...(replyTo.length > 0 ? { replyTo } : {}) });
+    const { error } = await new Resend(apiKey).emails.send({ from, to, subject, html, text });
     if (error) {
       console.error("[email] Resend a refusé l'envoi :", error.message);
       return { ok: false, reason: "failed" };
@@ -77,48 +75,34 @@ function button(href: string, label: string): string {
   return `<p style="margin:22px 0;"><a href="${escapeHtml(href)}" style="display:inline-block;background:#845EC2;color:#ffffff;text-decoration:none;padding:13px 24px;border-radius:999px;font-size:15px;">${escapeHtml(label)}</a></p>`;
 }
 
-export type GuestMailKind = "created" | "updated";
-
-export async function sendGuestConfirmation(input: RsvpInput, editUrl: string, kind: GuestMailKind): Promise<MailResult> {
-  const created = kind === "created";
-  const title = created ? "Merci, votre réponse est enregistrée" : "Votre réponse a été mise à jour";
-  const html = layout(
-    title,
-    `<p style="font-size:15px;line-height:1.6;margin:0 0 8px;">Bonjour ${escapeHtml(input.firstName)},</p>
-<p style="font-size:15px;line-height:1.6;margin:0 0 8px;">${created ? "Nous avons bien reçu votre réponse. Voici ce que nous avons enregistré :" : "Voici votre réponse mise à jour :"}</p>
-${recapTable(input)}
-<p style="font-size:15px;line-height:1.6;margin:0;">Un changement de programme ? Vous pouvez modifier ou supprimer votre réponse à tout moment grâce à votre lien personnel :</p>
-${button(editUrl, "Modifier ma réponse")}
-<p style="font-size:12px;line-height:1.5;color:#5A4A68;margin:0;">Ce lien est personnel : ne le partagez pas. Vos informations servent uniquement à l'organisation du mariage, du voyage et du logement.</p>`,
-  );
-  const text = `Bonjour ${input.firstName},\n\n${created ? "Nous avons bien reçu votre réponse." : "Votre réponse a été mise à jour."}\n\n${recapText(input)}\n\nModifier ou supprimer votre réponse : ${editUrl}\n\n${SITE.name} — ${SITE.tagline}`;
-  return send(input.email, created ? "Votre réponse au mariage de Marleine & Franck" : "Votre réponse a été mise à jour", html, text, adminRecipients());
-}
-
-/** Envoyé quand quelqu'un soumet le formulaire avec une adresse déjà enregistrée. */
-export async function sendExistingResponseLink(email: string, firstName: string, editUrl: string): Promise<MailResult> {
-  const html = layout(
-    "Vous avez déjà répondu",
-    `<p style="font-size:15px;line-height:1.6;margin:0 0 8px;">Bonjour ${escapeHtml(firstName)},</p>
-<p style="font-size:15px;line-height:1.6;margin:0;">Une réponse existe déjà pour cette adresse e-mail. Pour la consulter ou la modifier, utilisez votre lien personnel :</p>
-${button(editUrl, "Modifier ma réponse")}
-<p style="font-size:12px;line-height:1.5;color:#5A4A68;margin:0;">Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer ce message.</p>`,
-  );
-  const text = `Bonjour ${firstName},\n\nUne réponse existe déjà pour cette adresse e-mail. Pour la modifier : ${editUrl}\n\nSi vous n'êtes pas à l'origine de cette demande, ignorez ce message.`;
-  return send(email, "Votre lien pour modifier votre réponse", html, text, adminRecipients());
-}
-
 export type AdminMailKind = "created" | "updated" | "deleted";
 
+/** Confirmation envoyée à l'invité avec son lien personnel de modification. */
+export async function sendGuestConfirmation(input: RsvpInput, editUrl: string, updated = false): Promise<MailResult> {
+  if (!input.email) return { ok: false, reason: "not_configured" };
+  const title = updated ? "Votre réponse a été mise à jour" : "Merci, votre réponse a bien été enregistrée";
+  const html = layout(
+    title,
+    `<p style="margin:0 0 6px;font-size:15px;line-height:1.5;">Bonjour ${escapeHtml(input.firstName)}, voici ce que nous avons noté :</p>${recapTable(input)}<p style="font-size:14px;line-height:1.5;">Un changement ? Vous pouvez modifier ou supprimer votre réponse à tout moment.</p>${button(editUrl, "Modifier ma réponse")}`,
+  );
+  const text = `${title}\n\nBonjour ${input.firstName}, voici ce que nous avons noté :\n${recapText(input)}\n\nModifier ma réponse : ${editUrl}`;
+  return send([input.email], `${SITE.name} — ${title}`, html, text);
+}
+
+/** Renvoie le lien personnel à l'adresse qui a déjà répondu (jamais affiché à l'écran). */
+export async function sendGuestEditLink(email: string, editUrl: string): Promise<MailResult> {
+  const html = layout("Votre lien pour modifier votre réponse", `<p style="margin:0;font-size:15px;line-height:1.5;">Une réponse existe déjà pour cette adresse. Utilisez ce lien pour la consulter, la modifier ou la supprimer.</p>${button(editUrl, "Modifier ma réponse")}<p style="font-size:12px;color:#5A4A68;">Si vous n'êtes pas à l'origine de cette demande, ignorez simplement ce message.</p>`);
+  const text = `Une réponse existe déjà pour cette adresse. Pour la modifier ou la supprimer : ${editUrl}\n\nSi vous n'êtes pas à l'origine de cette demande, ignorez ce message.`;
+  return send([email], `${SITE.name} — Votre lien personnel`, html, text);
+}
+
+/** Notification aux organisateurs (si ADMIN_NOTIFICATION_EMAIL et Resend sont configurés). */
 export async function sendAdminNotification(input: RsvpInput, kind: AdminMailKind, adminUrl: string): Promise<MailResult> {
   const to = adminRecipients();
   if (to.length === 0) return { ok: false, reason: "not_configured" };
   const verb = { created: "Nouvelle réponse", updated: "Réponse modifiée", deleted: "Réponse supprimée par l'invité" }[kind];
   const name = `${input.firstName} ${input.lastName}`;
-  const html = layout(
-    `${verb} : ${name}`,
-    `${kind === "deleted" ? "" : recapTable(input)}${button(adminUrl, "Ouvrir le tableau de bord")}`,
-  );
+  const html = layout(`${verb} : ${name}`, `${kind === "deleted" ? "" : recapTable(input)}${button(adminUrl, "Ouvrir le tableau de bord")}`);
   const text = `${verb} : ${name}\n\n${kind === "deleted" ? "" : recapText(input) + "\n\n"}Tableau de bord : ${adminUrl}`;
   return send(to, `${verb} — ${name}`, html, text);
 }

@@ -6,11 +6,11 @@ import { getSiteUrl } from "./site";
 
 /** Colonnes renvoyées au client : edit_token_version n'en fait volontairement pas partie. */
 export const RSVP_COLUMNS =
-  "id,first_name,last_name,email,whatsapp,attendance_status,arrival_date,departure_date,stay_days,stay_nights,travel_dates_confirmed,accommodation_status,interested_in_shared_accommodation,accompanying_adults,accompanying_children,children_ages,accommodation_notes,dinner_status,comments,privacy_consent_at,created_at,updated_at";
+  "id,first_name,last_name,email,whatsapp,attendance_status,arrival_date,departure_date,stay_days,stay_nights,travel_dates_confirmed,accommodation_status,interested_in_shared_accommodation,accompanying_adults,accompanying_children,companion_names,accommodation_people,children_ages,accommodation_notes,dinner_status,comments,privacy_consent_at,created_at,updated_at";
 
 export type CreateResult =
   | { status: "created"; row: RsvpRow; editUrl: string }
-  | { status: "exists"; editUrl: string; firstName: string };
+  | { status: "exists" };
 
 export function editUrlFor(id: string, version: number): string {
   return `${getSiteUrl()}/reponse/${createEditToken(id, version)}`;
@@ -29,26 +29,17 @@ export async function createRsvp(input: RsvpInput): Promise<CreateResult> {
     return { status: "created", row, editUrl: editUrlFor(row.id, edit_token_version) };
   }
 
-  if (error?.code === "23505") {
-    const { data: existing, error: lookupError } = await sb
-      .from("wedding_rsvps")
-      .select("id,first_name,edit_token_version")
-      .eq("email", input.email)
-      .single();
-    if (lookupError || !existing) throw new Error("Réponse existante introuvable après conflit.");
-    return { status: "exists", editUrl: editUrlFor(existing.id, existing.edit_token_version), firstName: existing.first_name };
-  }
+  // Adresse e-mail déjà enregistrée : pas de doublon, et le lien personnel n'est jamais renvoyé à l'écran d'un inconnu.
+  if (error?.code === "23505") return { status: "exists" };
   throw new Error(error?.message ?? "Insertion impossible.");
 }
 
-export async function findEditLinkByEmail(email: string): Promise<{ editUrl: string; firstName: string } | null> {
-  const { data, error } = await getServiceClient()
-    .from("wedding_rsvps")
-    .select("id,first_name,edit_token_version")
-    .eq("email", email)
-    .maybeSingle();
+/** Lien personnel de la réponse associée à cette adresse (envoyé par e-mail uniquement) ; null si aucune réponse. */
+export async function findEditUrlByEmail(email: string): Promise<string | null> {
+  const { data, error } = await getServiceClient().from("wedding_rsvps").select("id,edit_token_version").eq("email", email).maybeSingle();
   if (error) throw new Error(error.message);
-  return data ? { editUrl: editUrlFor(data.id, data.edit_token_version), firstName: data.first_name } : null;
+  if (!data) return null;
+  return editUrlFor(data.id as string, data.edit_token_version as number);
 }
 
 /** Retrouve une réponse à partir de son lien personnel ; null si le jeton est invalide, falsifié ou périmé. */
@@ -67,18 +58,18 @@ export async function findRsvpByToken(token: string): Promise<{ row: RsvpRow; ve
   return { row, version: edit_token_version };
 }
 
-/** L'adresse e-mail n'est pas modifiable par l'invité : elle identifie la réponse. */
-export async function updateRsvpByInvitee(id: string, input: RsvpInput): Promise<RsvpRow> {
-  const { email: _email, ...columns } = inputToRow(input);
-  void _email;
+export type UpdateResult = { status: "updated"; row: RsvpRow } | { status: "email_taken" };
+
+export async function updateRsvpByInvitee(id: string, input: RsvpInput): Promise<UpdateResult> {
   const { data, error } = await getServiceClient()
     .from("wedding_rsvps")
-    .update(columns)
+    .update(inputToRow(input))
     .eq("id", id)
     .select(RSVP_COLUMNS)
     .single();
+  if (error?.code === "23505") return { status: "email_taken" };
   if (error || !data) throw new Error(error?.message ?? "Mise à jour impossible.");
-  return data as unknown as RsvpRow;
+  return { status: "updated", row: data as unknown as RsvpRow };
 }
 
 export async function deleteRsvpById(id: string): Promise<void> {

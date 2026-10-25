@@ -5,7 +5,6 @@ import { RsvpEdit } from "@/components/rsvp/RsvpEdit";
 import { inputToValues } from "@/components/rsvp/form-values";
 import { rowToInput } from "@/lib/rsvp-schema";
 import { findRsvpByToken } from "@/lib/rsvp-service";
-import { getSiteSettings } from "@/lib/site-settings";
 import { isServiceConfigured } from "@/lib/supabase/service";
 
 export const dynamic = "force-dynamic";
@@ -46,16 +45,15 @@ export default async function EditResponsePage({ params }: { params: Promise<{ t
   if (!found) {
     return (
       <Notice title="Ce lien n'est plus valide">
-        Le lien est incomplet, a été modifié ou la réponse a été supprimée. Vous pouvez répondre à nouveau depuis le site : si votre adresse e-mail est déjà enregistrée, un nouveau lien vous sera envoyé.
+        Le lien est incomplet, a été modifié ou la réponse a été supprimée. Si vous l&apos;avez perdu, répondez à nouveau avec la même adresse e-mail : nous vous le renverrons par e-mail.
       </Notice>
     );
   }
 
-  const settings = await getSiteSettings();
   return (
     <PageShell eyebrow="Votre réponse" title="Modifier ma réponse" narrow>
       <div className="rounded-[2rem] border border-white bg-white/90 p-6 shadow-soft sm:p-10">
-        <RsvpEdit token={token} initialValues={inputToValues(rowToInput(found.row))} dinnerNote={settings.dinnerDetails} />
+        <RsvpEdit token={token} initialValues={inputToValues(rowToInput(found.row))} />
       </div>
     </PageShell>
   );
