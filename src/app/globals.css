@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@theme {
+  --color-rose: #f7c8e0;
+  --color-rose-deep: #e7a3c8;
+  --color-violet: #845ec2;
+  --color-violet-deep: #5e3c9e;
+  --color-lavender: #ede4ff;
+  --color-blush: #fff3f9;
+  --color-ink: #30203f;
+  --color-ink-soft: #5a4a68;
+  --color-line: #e5daf4;
+
+  --shadow-soft: 0 24px 60px -28px rgb(94 60 158 / 0.45);
+  --shadow-card: 0 12px 40px -20px rgb(94 60 158 / 0.35);
+
+  --animate-float: float 9s ease-in-out infinite;
+  --animate-drift: drift 22s ease-in-out infinite;
+  --animate-ring: ring-spin 28s linear infinite;
+  --animate-pulse-ring: pulse-ring 2.6s ease-out infinite;
+  --animate-hero-in: hero-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes hero-in {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
+  @keyframes drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(24px, -18px, 0) scale(1.06);
+    }
+  }
+  @keyframes ring-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.8);
+      opacity: 0.55;
+    }
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.75rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-blush);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  overflow-x: clip;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Chiffres alignés : sans cela, 13h00 s'affiche en chiffres elzéviriens (13hoo). */
+.font-display {
+  font-variant-numeric: lining-nums;
+  font-feature-settings: "lnum" 1;
+}
+
+::selection {
+  background: var(--color-rose);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-violet);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Cadre doux autour des photos : dégradé rose -> violet, très discret. */
+.ring-gradient {
+  background: conic-gradient(from 0deg, #f7c8e0, #845ec2, #ede4ff, #f7c8e0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  nav,
+  .no-print {
+    display: none !important;
+  }
+}

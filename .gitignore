@@ -1,0 +1,23 @@
+# dépendances
+node_modules/
+
+# build Next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# environnement et secrets
+.env
+.env.*
+!.env.example
+
+# caches et originaux volumineux
+.cache/
+public/images/couple/originals/
+
+# divers
+.vercel
+.DS_Store
+coverage/
+npm-debug.log*

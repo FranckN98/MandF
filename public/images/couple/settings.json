@@ -1,0 +1,46 @@
+{
+  "hero-1": {
+    "alt": "Franck embrasse tendrement Marleine, en gros plan",
+    "focus": "60% 42%"
+  },
+  "hero-2": {
+    "alt": "Marleine et Franck forment un cœur avec leurs mains devant un cœur gravé dans le tronc d'un arbre",
+    "focus": "50% 24%"
+  },
+  "hero-3": {
+    "alt": "Marleine et Franck en tenues traditionnelles, assis sur des fauteuils en rotin lors de leur mariage traditionnel",
+    "focus": "50% 52%"
+  },
+  "hero-4": {
+    "alt": "Marleine et Franck, de dos et enlacés, regardent le fleuve depuis une télécabine sous la pluie",
+    "focus": "50% 42%"
+  },
+  "story-2018": {
+    "alt": "Marleine et Franck, de dos et enlacés, regardent le fleuve depuis une télécabine sous la pluie",
+    "focus": "50% 45%"
+  },
+  "story-2024-a": {
+    "alt": "Marleine et Franck forment un cœur avec leurs mains devant un cœur gravé dans le tronc d'un arbre",
+    "focus": "50% 22%"
+  },
+  "story-2024-b": {
+    "alt": "Marleine et Franck en tenues traditionnelles, assis sur des fauteuils en rotin lors de leur mariage traditionnel",
+    "focus": "50% 40%"
+  },
+  "story-2025": {
+    "alt": "Marleine et Franck s'embrassent en tenant leur nouveau-née Elikia dans leurs bras",
+    "focus": "50% 30%"
+  },
+  "story-2025-b": {
+    "alt": "Marleine et Franck embrassent leur petite fille Elikia, nouveau-née, serrée entre eux",
+    "focus": "50% 38%"
+  },
+  "hero-5": {
+    "alt": "Marleine et Franck s'embrassent en tenant leur nouveau-née Elikia dans leurs bras",
+    "focus": "50% 25%"
+  },
+  "hero-6": {
+    "alt": "Marleine et Franck embrassent leur petite fille Elikia, nouveau-née, serrée entre eux",
+    "focus": "50% 30%"
+  }
+}

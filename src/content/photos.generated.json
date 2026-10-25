@@ -1,0 +1,301 @@
+{
+  "cityhall-facade": {
+    "slug": "cityhall-facade",
+    "width": 4288,
+    "height": 2848,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Façade en brique rouge de l'hôtel de ville de Copenhague et sa tour, sous un ciel bleu",
+    "caption": "Copenhagen City Hall — façade sur Rådhuspladsen",
+    "lqip": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAADQAwCdASoYABAAPt1cpkyopSOiMAgBEBuJZgCdABtj0XmWsGMdvkgA96XhgnnBBexMbsPDm3fYm3l6bKHfuLG4m4Rr/NIPUJZ1FR1/tez1SZ3oPZfOwEFC5ODEeGNt1lcJx07rfhfoAAAA",
+    "credit": {
+      "author": "Axel Kuhlmann",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Copenhagen_City_Hall,_Denmark.jpg",
+      "title": "Copenhagen City Hall, Denmark.jpg"
+    }
+  },
+  "cityhall-hall": {
+    "slug": "cityhall-hall",
+    "width": 6456,
+    "height": 4480,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Le grand hall de l'hôtel de ville de Copenhague, sa verrière, ses arcades et ses bannières rouges et blanches",
+    "caption": "Rådhushallen — le grand hall de la mairie",
+    "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAAAwBQCdASoYABEAPtVapEyoJSOiMAwBABqJZwC06Bu2aMDLOmdwviWVPSHESzOMO7SSAAD+olo2d3OlAutfHL/yewqT81ImqezLhxbr6zkCzraCK0cnxsVuKtVjq8TCPL0eqmNQsOPKdyq7avRMAAAA",
+    "credit": {
+      "author": "Francesco Bini",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Copenhagen,_municipio,_interno,_gran_salone_02.jpg",
+      "title": "Copenhagen, municipio, interno, gran salone 02.jpg"
+    }
+  },
+  "cityhall-detail": {
+    "slug": "cityhall-detail",
+    "width": 6669,
+    "height": 4424,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Arcades décorées de mosaïques turquoise et de fenêtres dans le grand hall de la mairie de Copenhague",
+    "caption": "Détail d'architecture du grand hall",
+    "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAACwAwCdASoYABAAPt1apkyopSOiMAgBEBuJYwCdAAuGk2P9x/sQgADso9O7gMBrvvLhQbwVSmYBOZDxPssxaglBYL4ouN1QM5SHXkBIQe4vFHUXdK+/HLykGFbU8gmK4AA=",
+    "credit": {
+      "author": "Francesco Bini",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Copenhagen,_municipio,_interno,_gran_salone_06_finestre_con_animali_affrontati_nei_timpani,_1905_ca.jpg",
+      "title": "Copenhagen, municipio, interno, gran salone 06 finestre con animali affrontati nei timpani, 1905 ca.jpg"
+    }
+  },
+  "cityhall-night": {
+    "slug": "cityhall-night",
+    "width": 6000,
+    "height": 4000,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "La mairie de Copenhague illuminée de nuit",
+    "caption": "Copenhagen City Hall de nuit",
+    "lqip": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAAAQBACdASoYABAAPt1cpkyopSOiMAgBEBuJZQC7ACHf5B7uEQsdghLSIAD+9WeJhFr0CWmjNmzOtjBmHh/Hopo7YIe5ia3G9NwI7RAA",
+    "credit": {
+      "author": "OleNeitzel",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Copenhagen_City_Hall_at_night.jpg",
+      "title": "Copenhagen City Hall at night.jpg"
+    }
+  },
+  "cityhall-square": {
+    "slug": "cityhall-square",
+    "width": 5184,
+    "height": 3456,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "L'hôtel de ville de Copenhague vu depuis Rådhuspladsen, avec la fontaine au premier plan",
+    "caption": "La mairie et la place Rådhuspladsen",
+    "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAABQBACdASoYABAAPt1ep00opSOiMAgBEBuJZwAAW4bfSgqaHFM0JxsYX3kAAP7zdQnGHL9vLi43iSC0UTTC7fIwp2Dfroq82/YVLmApPZ+oZjABL9m0kAliL4W/9jHOMXKqBAAA",
+    "credit": {
+      "author": "Fred Romero from Paris, France",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:K%C3%B8benhavn_-_K%C3%B8benhavns_R%C3%A5dhus_(30882413572).jpg",
+      "title": "København - Københavns Rådhus (30882413572).jpg"
+    }
+  },
+  "tivoli-entrance": {
+    "slug": "tivoli-entrance",
+    "width": 5670,
+    "height": 3749,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "L'entrée illuminée de Tivoli Gardens à la tombée de la nuit, gardée par deux soldats de bois géants pour Noël",
+    "caption": "Tivoli Gardens — l'entrée à Noël",
+    "lqip": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAACQBACdASoYABAAPt1cpkyopSOiMAgBEBuJaACdMoR3JzKDl0uqAg/SaGN3IQAA/PrhxGlvwbbILuTUs2oZyiTT+tKTPTkgwS5GkFLRhVvPQg/y0XeJmVHL6adFmLX0IIj2v8l+2iMWgM/QXU/nkSJQD4ZWYqhaRZpc5y+9Asg2xFlD1Cvt7AAA",
+    "credit": {
+      "author": "Johan Wessman / News Oresund",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tivoli_K%C3%B8benhavn_20121130_0564F_(8233474507).jpg",
+      "title": "Tivoli København 20121130 0564F (8233474507).jpg"
+    }
+  },
+  "tivoli-swans": {
+    "slug": "tivoli-swans",
+    "width": 6000,
+    "height": 4000,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Sculptures lumineuses de cygnes devant le palais éclairé de Tivoli Gardens, sous la neige",
+    "caption": "Tivoli Gardens — cygnes lumineux et palais",
+    "lqip": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAACQBACdASoYABAAPt1eqE0opSQiMAgBEBuJZgCdMoGv/gMRmv+tjyNApJ/5ZQAA/iMP1dYGOTN9HuqObF5x+P/LvGNjQjwiQezoLe5392ErnXmpRkRbn3NZqxcsxW5ZbHg+svjh398hs+Zg7wOwuVUs4eRYlRLP1EAAAA==",
+    "credit": {
+      "author": "Maria Eklind",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Christmas_market_at_Tivoli,_Copenhagen_(23935776935).jpg",
+      "title": "Christmas market at Tivoli, Copenhagen (23935776935).jpg"
+    }
+  },
+  "tivoli-market": {
+    "slug": "tivoli-market",
+    "width": 5790,
+    "height": 3860,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Le marché de Noël de Tivoli Gardens au crépuscule, devant le palais aux façades illuminées",
+    "caption": "Tivoli Gardens — le marché de Noël",
+    "lqip": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADQAwCdASoYABAAPt1cp00opSOiMAgBEBuJbACdMoADTUmLAHUJgwAA/m9fcl58mg2AoW0Kx1tIuSfi14p/j+d4OUKBL2gBHZL6BZiddT0TEyCK7l2hwPWc/TotnLJ1W3rdF1UnswW3wNXSaqENXgAA",
+    "credit": {
+      "author": "Maria Eklind",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Christmas_market_at_Tivoli_(23011541394).jpg",
+      "title": "Christmas market at Tivoli (23011541394).jpg"
+    }
+  },
+  "tivoli-carousel": {
+    "slug": "tivoli-carousel",
+    "width": 6000,
+    "height": 4000,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Foule et manège éclairé au marché de Noël de Tivoli Gardens, à la tombée de la nuit",
+    "caption": "Tivoli Gardens — l'ambiance de Noël",
+    "lqip": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADwAwCdASoYABAAPt1eqU2opSQiMAgBEBuJZACdHX+gUG7Is8P+B2sIAP7o8OrmLwBg15TjeOPTiTLD7O4hw+i+ZF+UqwhcIlw1saKRvwHdoWLyg9rjrpf2XBvD4swAAAA=",
+    "credit": {
+      "author": "Maria Eklind",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Christmas_market_at_Tivoli,_Copenhagen_(23640182170).jpg",
+      "title": "Christmas market at Tivoli, Copenhagen (23640182170).jpg"
+    }
+  },
+  "centre-stroget": {
+    "slug": "centre-stroget",
+    "width": 5887,
+    "height": 3898,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Une rue piétonne du centre historique de Copenhague décorée de guirlandes, d'étoiles et de cœurs rouges pour Noël",
+    "caption": "Centre historique — Strøget décorée pour Noël",
+    "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAAAwBACdASoYABAAPt1ep00opSOiMAgBEBuJYgCdMoADgjqtYczCiOB8x8AA/rpMX7Ch7vw54VpPXL2MrN/aAiWLcBbhjPuRcj/eLaicVIx7m0VhvGyP+EGGqQJ7PB3bcYgIAAAA",
+    "credit": {
+      "author": "Johan Wessman / News Oresund",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:20191213_Stroget_julskyltat_Kopenhamn_0174_(49214659218).jpg",
+      "title": "20191213 Stroget julskyltat Kopenhamn 0174 (49214659218).jpg"
+    }
+  },
+  "centre-angleterre": {
+    "slug": "centre-angleterre",
+    "width": 6000,
+    "height": 4000,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Façade du Hôtel d'Angleterre à Kongens Nytorv, ornée de glaçons lumineux et d'un renne doré pour Noël",
+    "caption": "Kongens Nytorv — décorations de Noël",
+    "lqip": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAABwBACdASoYABAAPt1ap0yopSOiMAgBEBuJbACdH8ACucS9SW3uRdIkTsa/cAD+oWHoKZ/FRaqQgc0asHeageq/cxexMN5DbbmHHGgOYVL5c6JK8WmdUm1QHLp5HWK1zBnDP3pQ0oX7VPf1u509nluDctK/bSQAAAA=",
+    "credit": {
+      "author": "Johan Wessman / News Oresund",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:20191213_Hotel_d%27Angleterre_juldekoration_Kongens_Nytorv_Kopenhamn_0162_(49215393357).jpg",
+      "title": "20191213 Hotel d'Angleterre juldekoration Kongens Nytorv Kopenhamn 0162 (49215393357).jpg"
+    }
+  },
+  "nyhavn-night": {
+    "slug": "nyhavn-night",
+    "width": 6000,
+    "height": 4000,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Les façades colorées de Nyhavn et leurs voiliers se reflétant dans le canal, le soir, avec des guirlandes lumineuses",
+    "caption": "Nyhavn — le canal en soirée",
+    "lqip": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAACQBACdASoYABAAPt1apkyopSOiMAgBEBuJZgCdMoGv/gPIHXn4L+WQ9DPLauAA/iLH/dUf2HzaLe+6/Y7YSxp52ww4/Jh3YQAXKlC2G9JvCL+s3+ABrGZ/D1/FrRwfiaZioaxcb6r59CM8VlQ5oTYAAAA=",
+    "credit": {
+      "author": "Chris Lawton chrislawton",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Nyhavn,_Denmark_(Unsplash).jpg",
+      "title": "Nyhavn, Denmark (Unsplash).jpg"
+    }
+  },
+  "nyhavn-day": {
+    "slug": "nyhavn-day",
+    "width": 5434,
+    "height": 3623,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Les maisons colorées de Nyhavn alignées le long du quai, sous un ciel nuageux",
+    "caption": "Nyhavn — façades colorées",
+    "lqip": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADwAwCdASoYABAAPt1cpkyopSOiMAgBEBuJQBOkGxBgW8GRtEyHuI8AAP7TCexux5tQgbvQGpTrSOKLYL6Ce664Oehj5zaXe4Hypgqf9hsnXwn5vixvPmZWM576NCDFyDk0D27AAAA=",
+    "credit": {
+      "author": "Susanne Nilsson",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Colorful_Nyhavn_(28671126576).jpg",
+      "title": "Colorful Nyhavn (28671126576).jpg"
+    }
+  },
+  "winter-christiansborg": {
+    "slug": "winter-christiansborg",
+    "width": 5706,
+    "height": 3294,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "alt": "Le palais de Christiansborg et sa tour en briques, de nuit, sur une place couverte de neige",
+    "caption": "Christiansborg sous la neige",
+    "lqip": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQBACdASoYAA4APt1apkyopSOiMAgBEBuJagCdL1yB0CWGyVl3HXZMIAD+6MOLIvQVVhkB8HFpqjTxmbz5Ot6nH8Wqbj+mLDQFSGdHmfLAC1Gi8b68ivR4GgfophwT7ggAAA==",
+    "credit": {
+      "author": "Guillaume Baviere from Uppsala, Sweden",
+      "license": "CC BY-SA 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Christiansborg_2017-02-12.jpg",
+      "title": "Christiansborg 2017-02-12.jpg"
+    }
+  },
+  "hotel-cabinn-city": {
+    "slug": "hotel-cabinn-city",
+    "width": 1280,
+    "height": 849,
+    "widths": [
+      480,
+      960
+    ],
+    "alt": "Façade de l'hôtel CABINN City, immeuble moderne à balcons, dans la rue Mitchellsgade",
+    "caption": "CABINN City — Mitchellsgade",
+    "lqip": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAQBACdASoYABAAPt1cp0yopSOiMAgBEBuJZACdMvZgAAV9RQKbBcfMQAD+3ukgqbnDNoL0OsDsCZHZ+v8/qIIaIJLl86x9cp+4AG1MBcAws7FhVaEiR/qNbTpUOaPv2AYAjmJp93lP6V2UxqAAAA==",
+    "credit": {
+      "author": "Yusuke Kawasaki from Tokyo, Japan",
+      "license": "CC BY 2.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hotel_CABINN_City.jpg",
+      "title": "Hotel CABINN City.jpg"
+    }
+  }
+}
