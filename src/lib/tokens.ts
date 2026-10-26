@@ -6,9 +6,9 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function secret(): string {
-  const s = process.env.RSVP_TOKEN_SECRET;
+  const s = process.env.RSVP_TOKEN_SECRET ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!s || s.length < 32) {
-    throw new Error("RSVP_TOKEN_SECRET manquant ou trop court (32 caractères minimum).");
+    throw new Error("RSVP_TOKEN_SECRET ou SUPABASE_SERVICE_ROLE_KEY manquant ou trop court (32 caractères minimum).");
   }
   return s;
 }
