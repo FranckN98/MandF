@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import { PageShell } from "@/components/layout/PageShell";
 import { RSVP_COLUMNS } from "@/lib/rsvp-service";
 import type { RsvpRow } from "@/lib/rsvp-schema";
-import { getServiceClient, isServiceConfigured } from "@/lib/supabase/service";
+import { getServiceClient, isDatabaseConfigured } from "@/lib/supabase/service";
 import { AdminDashboard } from "./AdminDashboard";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Tableau de bord — Marleine & Franck", robots: { index: false, follow: false } };
 
 export default async function AdminPage() {
-  if (!isServiceConfigured()) {
+  if (!isDatabaseConfigured()) {
     return (
       <PageShell eyebrow="Espace organisateurs" title="Accès non autorisé" narrow>
         <p className="leading-relaxed text-ink-soft">

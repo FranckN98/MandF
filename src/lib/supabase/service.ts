@@ -7,6 +7,10 @@ export function isServiceConfigured(): boolean {
   return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY && process.env.RSVP_TOKEN_SECRET);
 }
 
+export function isDatabaseConfigured(): boolean {
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
+
 /**
  * Client "service_role" : contourne le RLS. À n'utiliser que dans les routes serveur qui ont déjà validé la requête.
  * La clé n'est jamais préfixée NEXT_PUBLIC_ et ce module est marqué server-only.
