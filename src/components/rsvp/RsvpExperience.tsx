@@ -53,9 +53,8 @@ export function RsvpExperience({ configured }: { configured: boolean }) {
         fieldErrors: (data.fieldErrors as Record<string, string> | undefined) ?? undefined,
       };
     }
-    const emailSent = data.emailSent === true;
     if (data.status === "exists") {
-      setResult({ status: "exists", emailSent });
+      setResult({ status: "exists", emailSent: false });
     } else {
       const editUrl = typeof data.editUrl === "string" ? data.editUrl : undefined;
       if (editUrl) {
@@ -66,7 +65,7 @@ export function RsvpExperience({ configured }: { configured: boolean }) {
           // Stockage indisponible (navigation privée) : le lien reste affiché à l'écran.
         }
       }
-      setResult({ status: "created", emailSent, editUrl });
+      setResult({ status: "created", emailSent: false, editUrl });
     }
     return { ok: true };
   };

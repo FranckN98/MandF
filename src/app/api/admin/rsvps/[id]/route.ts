@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { getAdminSession } from "@/lib/admin-auth";
 import { RSVP_COLUMNS } from "@/lib/rsvp-service";
 import { adminRsvpSchema, fieldErrors, inputToRow } from "@/lib/rsvp-schema";
+import { getServiceClient, isServiceConfigured } from "@/lib/supabase/service";
 
 export const dynamic = "force-dynamic";
 
@@ -10,8 +10,7 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 type Ctx = { params: Promise<{ id: string }> };
 
 export async function PATCH(req: Request, { params }: Ctx) {
-  const admin = await getAdminSession();
-  if (!admin) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!isServiceConfigured()) return NextResponse.json({ error: "not_configured" }, { status: 503 });
   const { id } = await params;
   if (!UUID_RE.test(id)) return NextResponse.json({ error: "invalid" }, { status: 400 });
 
@@ -27,7 +26,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
   }
 
   // Passe par la session de l'administrateur : les politiques RLS décident, pas seulement ce code.
-  const { data, error } = await admin.client
+  const { data, error } = await getServiceClient()
     .from("wedding_rsvps")
     .update(inputToRow(parsed.data))
     .eq("id", id)
@@ -43,12 +42,11 @@ export async function PATCH(req: Request, { params }: Ctx) {
 }
 
 export async function DELETE(_req: Request, { params }: Ctx) {
-  const admin = await getAdminSession();
-  if (!admin) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!isServiceConfigured()) return NextResponse.json({ error: "not_configured" }, { status: 503 });
   const { id } = await params;
   if (!UUID_RE.test(id)) return NextResponse.json({ error: "invalid" }, { status: 400 });
 
-  const { data, error } = await admin.client.from("wedding_rsvps").delete().eq("id", id).select("id");
+  const { data, error } = await getServiceClient().from("wedding_rsvps").delete().eq("id", id).select("id");
   if (error) return NextResponse.json({ error: "server", message: "Suppression impossible." }, { status: 500 });
   if (!data || data.length === 0) return NextResponse.json({ error: "not_found" }, { status: 404 });
   return NextResponse.json({ ok: true });

@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
 import { allowRequest, clientIp } from "@/lib/rate-limit";
 import { buildRecap } from "@/lib/recap";
-import { sendAdminNotification, sendGuestConfirmation } from "@/lib/email";
 import { deleteRsvpById, editUrlFor, findRsvpByToken, updateRsvpByInvitee } from "@/lib/rsvp-service";
 import { fieldErrors, guestEditSchema, rowToInput } from "@/lib/rsvp-schema";
-import { getSiteUrl } from "@/lib/site";
 import { isServiceConfigured } from "@/lib/supabase/service";
 
 export const dynamic = "force-dynamic";
@@ -44,9 +42,7 @@ export async function PUT(req: Request, { params }: Ctx) {
       return json({ error: "validation", fieldErrors: { email: "Cette adresse e-mail est déjà utilisée par une autre réponse." } }, 409);
     }
     const input = rowToInput(updated.row);
-    await sendAdminNotification(input, "updated", `${getSiteUrl()}/admin`);
-    const mail = await sendGuestConfirmation(input, editUrlFor(updated.row.id, g.found.version), true);
-    return json({ status: "updated", recap: buildRecap(input), emailSent: mail.ok });
+    return json({ status: "updated", recap: buildRecap(input), editUrl: editUrlFor(updated.row.id, g.found.version) });
   } catch (e) {
     console.error("[rsvp:update] échec :", e instanceof Error ? e.message : e);
     return json({ error: "server", message: "La modification n'a pas pu être enregistrée. Merci de réessayer." }, 500);
@@ -59,9 +55,7 @@ export async function DELETE(req: Request, { params }: Ctx) {
     const g = await guard(req, token);
     if (g.error) return g.error;
 
-    const input = rowToInput(g.found.row);
     await deleteRsvpById(g.found.row.id);
-    await sendAdminNotification(input, "deleted", `${getSiteUrl()}/admin`);
     return json({ status: "deleted" });
   } catch (e) {
     console.error("[rsvp:delete] échec :", e instanceof Error ? e.message : e);

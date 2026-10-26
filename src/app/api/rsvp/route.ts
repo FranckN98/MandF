@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
 import { allowRequest, clientIp } from "@/lib/rate-limit";
 import { buildRecap } from "@/lib/recap";
-import { sendAdminNotification, sendGuestConfirmation, sendGuestEditLink } from "@/lib/email";
-import { createRsvp, findEditUrlByEmail } from "@/lib/rsvp-service";
+import { createRsvp } from "@/lib/rsvp-service";
 import { fieldErrors, rsvpSchema } from "@/lib/rsvp-schema";
-import { getSiteUrl } from "@/lib/site";
 import { isServiceConfigured } from "@/lib/supabase/service";
 import { verifyTurnstile } from "@/lib/turnstile";
 
@@ -60,14 +58,10 @@ export async function POST(req: Request) {
 
     if (result.status === "exists") {
       // Le lien personnel n'est envoyé qu'à l'adresse e-mail concernée, jamais affiché à l'écran.
-      const existingUrl = input.email ? await findEditUrlByEmail(input.email) : null;
-      const mailed = existingUrl && input.email ? (await sendGuestEditLink(input.email, existingUrl)).ok : false;
-      return json({ status: "exists", emailSent: mailed });
+      return json({ status: "exists" });
     }
 
-    await sendAdminNotification(input, "created", `${getSiteUrl()}/admin`);
-    const mail = await sendGuestConfirmation(input, result.editUrl);
-    return json({ status: "created", recap: buildRecap(input), editUrl: result.editUrl, emailSent: mail.ok });
+    return json({ status: "created", recap: buildRecap(input), editUrl: result.editUrl });
   } catch (e) {
     console.error("[rsvp] échec :", e instanceof Error ? e.message : e);
     return json({ error: "server", message: "Votre réponse n'a pas pu être enregistrée. Merci de réessayer dans un instant." }, 500);

@@ -117,11 +117,12 @@ describe("POST /api/rsvp", () => {
     expect(h.createRsvp).not.toHaveBeenCalled();
   });
 
-  it("enregistre avec e-mail normalisé, total de participants correct et notifie organisateurs et invité", async () => {
+  it("enregistre avec e-mail normalisé et total de participants correct sans envoyer d'e-mail", async () => {
     const res = await post(payload());
     const body = await res.json();
     expect(res.status).toBe(200);
-    expect(body).toMatchObject({ status: "created", editUrl: "https://site.test/reponse/secret-link", emailSent: true });
+    expect(body).toMatchObject({ status: "created", editUrl: "https://site.test/reponse/secret-link" });
+    expect(body).not.toHaveProperty("emailSent");
     expect(JSON.stringify(body.recap)).toContain("3 personnes : vous, 1 adulte, 1 enfant");
     expect(JSON.stringify(body.recap)).toContain("2 nuits");
     expect(h.createRsvp.mock.calls[0][0]).toMatchObject({
@@ -132,16 +133,18 @@ describe("POST /api/rsvp", () => {
       accommodationPeople: 3,
     });
     expect(h.createRsvp.mock.calls[0][0]).not.toHaveProperty("whatsapp");
-    expect(h.adminMail).toHaveBeenCalledOnce();
-    expect(h.guestMail).toHaveBeenCalledOnce();
+    expect(h.adminMail).not.toHaveBeenCalled();
+    expect(h.guestMail).not.toHaveBeenCalled();
   });
 
-  it("un échec des e-mails n'empêche pas la confirmation", async () => {
+  it("reste confirmée même sans configuration e-mail", async () => {
     h.adminMail.mockResolvedValue({ ok: false, reason: "not_configured" });
     h.guestMail.mockResolvedValue({ ok: false, reason: "not_configured" });
     const res = await post(payload());
     expect(res.status).toBe(200);
-    expect(await res.json()).toMatchObject({ status: "created", emailSent: false });
+    expect(await res.json()).toMatchObject({ status: "created" });
+    expect(h.adminMail).not.toHaveBeenCalled();
+    expect(h.guestMail).not.toHaveBeenCalled();
   });
 
   it("limite aussi par adresse e-mail (429)", async () => {
@@ -150,14 +153,14 @@ describe("POST /api/rsvp", () => {
     expect(h.createRsvp).not.toHaveBeenCalled();
   });
 
-  it("sur adresse déjà utilisée : pas de doublon, lien envoyé par e-mail uniquement, jamais dans la réponse", async () => {
+  it("sur adresse déjà utilisée : pas de doublon et aucune notification", async () => {
     h.createRsvp.mockResolvedValue({ status: "exists" });
     const res = await post(payload());
     const text = await res.text();
     expect(res.status).toBe(200);
-    expect(JSON.parse(text)).toEqual({ status: "exists", emailSent: true });
+    expect(JSON.parse(text)).toEqual({ status: "exists" });
     expect(text).not.toContain("existing-link");
-    expect(h.guestLinkMail).toHaveBeenCalledWith("marie@example.com", "https://site.test/reponse/existing-link");
+    expect(h.guestLinkMail).not.toHaveBeenCalled();
     expect(h.adminMail).not.toHaveBeenCalled();
   });
 

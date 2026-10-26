@@ -1,16 +1,15 @@
 import { NextResponse } from "next/server";
-import { getAdminSession } from "@/lib/admin-auth";
 import { toCsv } from "@/lib/csv";
 import { RSVP_COLUMNS } from "@/lib/rsvp-service";
 import type { RsvpRow } from "@/lib/rsvp-schema";
+import { getServiceClient, isServiceConfigured } from "@/lib/supabase/service";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const admin = await getAdminSession();
-  if (!admin) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!isServiceConfigured()) return NextResponse.json({ error: "not_configured" }, { status: 503 });
 
-  const { data, error } = await admin.client
+  const { data, error } = await getServiceClient()
     .from("wedding_rsvps")
     .select(RSVP_COLUMNS)
     .order("last_name", { ascending: true })
