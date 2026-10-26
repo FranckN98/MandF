@@ -87,5 +87,31 @@
     "version": "316715e6",
     "alt": "Marleine et Franck en tenues traditionnelles, assis sur des fauteuils en rotin lors de leur mariage traditionnel",
     "focus": "50% 40%"
+  },
+  "story-2025-b": {
+    "width": 2000,
+    "height": 3000,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "lqip": "data:image/webp;base64,UklGRu4AAABXRUJQVlA4IOIAAABwBgCdASoYACQAPt1mqlCopSOipWsxEBuJYwC90CeMRbTYzB3AqAKRva2ORZKHU48uxsnPR05fFKnYPxAA/gG7HbsLCq71Wg62ZpUNXCGG6EleJdPZLoAEEVt/BJk+iLnTI16A9OSiQfjK+sYo8L/yKLdudv5bLYJONVjImAhTn6YD4NDtjM+eV/zxrS5BC28HCy0Nit7Mo1q9FJQdrOiScKENcjeQnuhMEsKvYK5lOZfcpgEQbLF4ziTCRMhdLTqb7rBNuDP8B+61e6+uSn76MWfxLTu2dra/kLMAccIotgAA",
+    "version": "9ce3199b",
+    "alt": "Marleine et Franck embrassent leur petite fille Elikia, nouveau-née, serrée entre eux",
+    "focus": "50% 38%"
+  },
+  "story-2025": {
+    "width": 3000,
+    "height": 2001,
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "lqip": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAABQBACdASoYABAAPt1cpkyopSOiMAgBEBuJQBOmUABpcGglj5nmHv+YIkpAAP60yHX0VUGOod8cAybY+4rgPkcBqPf0WWYbFyS9Hv5ZMXqUhKWrdjbh0jtnaisBQ0afXFegAA==",
+    "version": "f6c8f6b5",
+    "alt": "Marleine et Franck s'embrassent en tenant leur nouveau-née Elikia dans leurs bras",
+    "focus": "50% 30%"
   }
 }

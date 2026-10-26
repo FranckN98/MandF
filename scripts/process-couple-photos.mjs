@@ -55,7 +55,7 @@ for (const file of files.sort()) {
   // Variantes plus étroites que l'original + l'original lui-même (jusqu'à 1600 px) : aucun agrandissement artificiel.
   const widths = [...new Set([...WIDTHS.filter((w) => w < width), Math.min(width, 1600)])].sort((a, b) => a - b);
 
-  for (const old of await fs.readdir(dir)) if (old.startsWith(`${name}-`) && old.endsWith(".webp")) await fs.rm(path.join(dir, old));
+  for (const old of await fs.readdir(dir)) if (new RegExp(`^${name}-\\d+\\.webp$`).test(old)) await fs.rm(path.join(dir, old));
   for (const w of widths) {
     await sharp(source).rotate().resize({ width: w, withoutEnlargement: true }).webp({ quality: 84, effort: 5 }).toFile(path.join(dir, `${name}-${w}.webp`));
   }
